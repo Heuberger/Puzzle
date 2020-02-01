@@ -1,0 +1,12 @@
+*~
+*.bak
+*.swp
+*.orig
+
+*.csr
+*.jks
+
+/build/
+/pics/
+/snd/
+/.settings/

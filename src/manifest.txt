@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: cfh.puzzle.Test
+Implementation-Vendor: Carlos Heuberger
