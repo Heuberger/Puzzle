@@ -9,6 +9,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
@@ -42,10 +44,10 @@ import cfh.FileChooser;
 
 public class Test extends GamePanel {
 
-    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.01";
+    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.02";
     
     private static final int MAXX = 5000;
-    private static final int MAXY = 2048;
+    private static final int MAXY = 4000;
 
     private static final Color[] COLORS = new Color[] {
         Color.RED,
@@ -267,7 +269,15 @@ public class Test extends GamePanel {
         setSize(MAXX, MAXY);
         
         frame = new JFrame(VERSION + " - " + title);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent ev) {
+                if (showConfirmDialog(frame, "Close ?", "Confirm", YES_NO_OPTION) == YES_OPTION) {
+                    frame.dispose();
+                }
+            }
+        });
         frame.setLayout(null);
         frame.add(this);
         frame.setSize(1024, 800);
@@ -285,6 +295,13 @@ public class Test extends GamePanel {
             Object[] msg = { "File already exists!", file.getAbsolutePath(), "Overwrite?" };
             if (file.exists() && showConfirmDialog(getParent(), msg, "Confirm", OK_CANCEL_OPTION) != OK_OPTION)
                 return;
+            if (file.exists()) {
+                File bak = new File(file.getParentFile(), file.getName() + ".bak");
+                if (bak.exists()) {
+                    bak.delete();
+                }
+                file.renameTo(bak);
+            }
             try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file))) {
                 output.writeInt(MAGIC);
                 output.writeInt(type);
@@ -408,7 +425,7 @@ public class Test extends GamePanel {
                     gg.fill3DRect(0, 0, width, height, true);
                     if (BORDER >= 3) {
                         gg.fill3DRect(1, 1, width-2, height-2, true);
-                        if (BORDER >= 6) {
+                        if (BORDER >= 5) {
                             gg.fill3DRect(2, 2, width-4, height-4, true);
                         }
                     }

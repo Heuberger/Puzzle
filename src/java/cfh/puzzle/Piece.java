@@ -9,6 +9,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 public abstract class Piece extends JComponent
-                            implements MouseListener, MouseMotionListener {
+                            implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     private final int tileX;
     private final int tileY;
@@ -55,6 +57,7 @@ public abstract class Piece extends JComponent
         
         addMouseListener(this);
         addMouseMotionListener(this);
+        addMouseWheelListener(this);
     }
     
     void setDir(Direction dir) {
@@ -148,10 +151,16 @@ public abstract class Piece extends JComponent
         return done;
     }
     
+    public void unselect( ) {
+        selected = false;
+    }
+    
+    public void select() {
+        selected = true;
+    }
     public boolean isSelected() {
         return selected;
     }
-    
 
     public synchronized void addGameListener(GameListener l) {
         if (l != null) {
@@ -176,57 +185,62 @@ public abstract class Piece extends JComponent
 
     @Override
     public void mousePressed(MouseEvent ev) {
-        if (ev.getButton() == BUTTON1) {
+        if (SwingUtilities.isLeftMouseButton(ev)) {
             pressedX = ev.getX();
             pressedY = ev.getY();
-        }
-        synchronized (this) {
-            for (GameListener listener : listeners) {
-                listener.pieceSelected(this);
+            synchronized (this) {
+                for (GameListener listener : listeners) {
+                    listener.pieceSelected(this);
+                }
             }
+        } else if (SwingUtilities.isMiddleMouseButton(ev)) {
+            getParent().dispatchEvent(ev);
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent ev) {
-        if (ev.getButton() == BUTTON1) {
+        if (SwingUtilities.isLeftMouseButton(ev)) {
             synchronized (this) {
                 for (GameListener listener : listeners) {
                     listener.pieceMoved(this, getX(), getY());
                 }
             }
+        } else if (SwingUtilities.isMiddleMouseButton(ev)) {
+            getParent().dispatchEvent(ev);
         }
     }
 
     @Override
     @SuppressWarnings("incomplete-switch")
     public void mouseClicked(MouseEvent ev) {
-        switch (ev.getButton()) {
-            case BUTTON1: {
-                if (ev.getClickCount() == 2) {
+        if (SwingUtilities.isLeftMouseButton(ev)) {
+            switch (ev.getClickCount()) {
+                case 1:
+                    if ((ev.getModifiersEx() & CTRL_DOWN_MASK) != 0) {
+                        synchronized (this) {
+                            for (GameListener listener : listeners) {
+                                listener.pieceDisconnect(this);
+                            }
+                        }
+                    } else if ((ev.getModifiersEx() & SHIFT_DOWN_MASK) != 0) {
+                        selected = !selected;
+                        getParent().repaint();
+                    }
+                    break;
+                case 2:
                     boolean shift = (ev.getModifiersEx() & SHIFT_DOWN_MASK) != 0;
                     rotate(shift);
-                } else if ((ev.getModifiersEx() & CTRL_DOWN_MASK) != 0) {
-                    synchronized (this) {
-                        for (GameListener listener : listeners) {
-                            listener.pieceDisconnect(this);
-                        }
-                    }
-                } else if ((ev.getModifiersEx() & SHIFT_DOWN_MASK) != 0) {
-                    selected = !selected;
-                    repaint();
-                }
-                break;
+                    break;
             }
-            case BUTTON2: {
-                boolean shift = (ev.getModifiersEx() & SHIFT_DOWN_MASK) != 0;
-                rotate(shift);
-                break;
-            }
-            case BUTTON3: {
-                boolean shift = (ev.getModifiersEx() & SHIFT_DOWN_MASK) != 0;
-                rotate(!shift);
-                break;
+        } else if (SwingUtilities.isRightMouseButton(ev)) {
+            switch (ev.getClickCount()) {
+                case 1:
+                    break;
+                case 2:
+                    boolean shift = (ev.getModifiersEx() & SHIFT_DOWN_MASK) != 0;
+                    rotate(!shift);
+                    break;
             }
         }
     }
@@ -287,6 +301,11 @@ public abstract class Piece extends JComponent
     
     @Override
     public void mouseMoved(MouseEvent ev) {
+    }
+    
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent ev) {
+        rotate(ev.getWheelRotation() > 0);
     }
     
     @Override

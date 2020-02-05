@@ -1,5 +1,6 @@
 package cfh.puzzle;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -153,11 +154,16 @@ public class MaskPiece extends Piece {
         
         Graphics2D gg = (Graphics2D) g;
 
-        Image img = isSelected() ? mask : createImage();
+//        Image img = isSelected() ? mask : createImage();
+        Image img = createImage();
         if (img == null) {
             gg.clearRect(0, 0, getWidth(), getHeight());
         } else {
             gg.drawImage(img, 0, 0, this);
+        }
+        if (isSelected()) {
+            gg.setColor(new Color(0, 200, 0, 200));
+            gg.fillOval(getWidth()/5, getHeight()/5, getWidth()/3, getHeight()/3);
         }
     }
     

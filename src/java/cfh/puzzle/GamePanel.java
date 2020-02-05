@@ -1,11 +1,18 @@
 package cfh.puzzle;
 
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 import static javax.swing.JOptionPane.*;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -17,7 +24,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +38,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
 import cfh.FileChooser;
@@ -53,9 +61,12 @@ public class GamePanel extends JPanel implements GameListener {
     
     private final List<Piece> pieces = new ArrayList<>();
     
-    private final Map<Integer, Point> bookmarks = new HashMap<>();
     private static final Integer KEY_HISTORY = KeyEvent.VK_SPACE; 
-    
+    private final Map<Integer, Point> bookmarks = new HashMap<>();
+
+    private static final int KEY_NO_GROUP = KeyEvent.VK_SPACE;
+    private int actualGroup = KEY_NO_GROUP;
+    private final Map<Integer, List<Piece>> groups = new HashMap<>();
 
     public GamePanel(String title, int sx, int sy) {
         if (sx < 1) throw new IllegalArgumentException("negative sx: " + sx);
@@ -74,20 +85,34 @@ public class GamePanel extends JPanel implements GameListener {
             public void keyPressed(KeyEvent ev) {
                 int ch = ev.getExtendedKeyCode();
                 boolean ctrl = (ev.getModifiersEx() & ev.CTRL_DOWN_MASK) != 0;
-                if ((ev.VK_0 <= ch && ch <= ev.VK_9) 
-                        || (ev.VK_A <= ch && ch <= ev.VK_Z)
-                        || ch == KEY_HISTORY) {
-                    Point actual = getLocation();
-                    if (ctrl && ch != KEY_HISTORY) {
-                        putBookmark(ch, actual);
-                        Toolkit.getDefaultToolkit().beep();
-                    } else {
-                        Point p = bookmarks.get(ch);
-                        if (p != null) {
-                            putBookmark(KEY_HISTORY, actual);
-                            setLocation(p);
-                            repaint();
-                        }
+                boolean shift = (ev.getModifiersEx() & ev.SHIFT_DOWN_MASK) != 0;
+                boolean mark = (ev.VK_0 <= ch && ch <= ev.VK_9) || (ev.VK_A <= ch && ch <= ev.VK_Z);
+                Point actual = getLocation();
+                
+                if (shift && ctrl && mark) {
+                    actualGroup = ch;
+                    groups.put(ch, pieces.stream().filter(Piece::isSelected).collect(toList()));
+                    repaint();
+                    Toolkit.getDefaultToolkit().beep();
+                }
+                if (shift && (mark || ch == KEY_NO_GROUP)) {
+                    if (actualGroup != KEY_NO_GROUP) {
+                        groups.put(actualGroup, pieces.stream().filter(Piece::isSelected).collect(toList()));
+                    }
+                    actualGroup = ch;
+                    pieces.stream().forEach(Piece::unselect);
+                    groups.getOrDefault(ch, emptyList()).stream().forEach(Piece::select);
+                    repaint();
+                    Toolkit.getDefaultToolkit().beep();
+                } else if (ctrl && mark) {
+                    putBookmark(ch, actual);
+                    Toolkit.getDefaultToolkit().beep();
+                } else if (!shift && !ctrl && (mark || ch == KEY_HISTORY)) {
+                    Point p = bookmarks.get(ch);
+                    if (p != null) {
+                        putBookmark(KEY_HISTORY, actual);
+                        setLocation(p);
+                        repaint();
                     }
                 }
             }
@@ -114,11 +139,11 @@ public class GamePanel extends JPanel implements GameListener {
     }
     
     protected List<Piece> getPieces() {
-        return Collections.unmodifiableList(pieces);
+        return unmodifiableList(pieces);
     }
     
     protected Map<Integer, Point> getBookmarks() {
-        return Collections.unmodifiableMap(bookmarks);
+        return unmodifiableMap(bookmarks);
     }
     
     protected void putBookmark(Integer key, Point point) {
@@ -198,6 +223,7 @@ public class GamePanel extends JPanel implements GameListener {
                 p.setLocation(p.getX()+dx, p.getY()+dy);
             }
             piece.connect(next);
+            Toolkit.getDefaultToolkit().beep();
         }
     }
 
@@ -262,6 +288,16 @@ public class GamePanel extends JPanel implements GameListener {
         gg.fillRect(0, 0, w, 2);
         gg.fillRect(w-2, 0, 2, h);
         gg.fillRect(0, h-2, w, 2);
+
+        String info = String.format("%c: %4d selected", (char) actualGroup, pieces.stream().filter(Piece::isSelected).count());
+        gg.setFont(new Font("monospaced", Font.BOLD, 16));
+        FontMetrics fm = gg.getFontMetrics();
+        int tw = fm.stringWidth(info);
+        int th = fm.getHeight();
+        gg.setColor(new Color(0, 200, 0, 100));
+        gg.fillRect(-getX(), -getY(), 4+tw+4, th);
+        gg.setColor(new Color(0, 0, 0, 255));
+        gg.drawString(info, 4-getX(), fm.getAscent()+fm.getLeading()-getY());
     }
     
     private void doHome(ActionEvent ev) {
@@ -273,6 +309,7 @@ public class GamePanel extends JPanel implements GameListener {
     }
     
     private void doArrange(ActionEvent ev) {
+        boolean all = actualGroup == KEY_NO_GROUP && pieces.stream().noneMatch(Piece::isSelected);
         if (isCtrl(ev)) {
             int w = getParent().getWidth();
             int h = getParent().getHeight();
@@ -282,6 +319,8 @@ public class GamePanel extends JPanel implements GameListener {
             int y0 = 15 - getY();
             for (Piece piece : pieces) {
                 if (!piece.getConnected().isEmpty())
+                    continue;
+                if (!all && !piece.isSelected())
                     continue;
 
                 int x = x0 + i*(sizeX+20) + 5*(j%2);
@@ -312,9 +351,11 @@ public class GamePanel extends JPanel implements GameListener {
                         Piece piece = (Piece) comp;
                         if (!piece.getConnected().isEmpty())
                             continue;
-                        
-                        int pw = (piece.getWidth() + sizeX) / 2;
-                        int ph = (piece.getHeight() + sizeY) / 2; 
+                        if (!all && !piece.isSelected())
+                            continue;
+      
+                        int pw = (piece.getWidth() + sizeX) / 2 + 2;
+                        int ph = (piece.getHeight() + sizeY) / 2 + 2; 
                         if (x + pw > w - getX()) {
                             x = - getX() + delta;
                             y += ph;
@@ -337,12 +378,22 @@ public class GamePanel extends JPanel implements GameListener {
     protected void doShow(ActionEvent ev) {
         if (image != null) {
             if (preview == null) {
-                ImageIcon icon = new ImageIcon(image);
+                Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+                ImageIcon icon;
+                if (image.getWidth() > screen.width-20 || image.getHeight() > screen.height-100) {
+                    double w = (double) image.getWidth() / (screen.width-20);
+                    double h = (double) image.getHeight() / (screen.height-100);
+                    double scale = Math.max(w, h);
+                    System.out.println(scale);
+                    icon = new ImageIcon(image.getScaledInstance((int)(image.getWidth()/scale), (int)(image.getHeight()/scale), Image.SCALE_SMOOTH));
+                } else {
+                    icon = new ImageIcon(image);
+                }
                 JLabel msg = new JLabel(icon);
                 preview = new JDialog(SwingUtilities.windowForComponent(this));
                 preview.setTitle("Preview - " + title);
                 preview.setModal(false);
-                preview.add(msg);
+                preview.add(new JScrollPane(msg));
                 msg.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent ev) {
@@ -423,36 +474,65 @@ public class GamePanel extends JPanel implements GameListener {
 
         private int pressedX;
         private int pressedY;
+        
+        private JWindow detail = null;
 
         @Override
         public void mousePressed(MouseEvent ev) {
-            if (!SwingUtilities.isLeftMouseButton(ev)) {
-                return;
+            if (SwingUtilities.isLeftMouseButton(ev)) {
+                pressedX = ev.getX();
+                pressedY = ev.getY();
+            } else if (SwingUtilities.isMiddleMouseButton(ev)) {
+                if (detail == null) {
+                    detail = new JWindow(getRootFrame());
+                    BufferedImage img = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D gg = img.createGraphics();
+                    try {
+                        Point p = getLocationOnScreen();
+                        gg.scale(3, 3);
+                        gg.translate(p.getX() - ev.getXOnScreen() + img.getWidth()/6, p.getY() - ev.getYOnScreen() + img.getHeight()/6);
+                        paint(gg);
+                    } finally {
+                        gg.dispose();
+                    }
+                    JLabel lbl = new JLabel(new ImageIcon(img));
+                    detail.add(lbl);
+                    detail.pack();
+                    detail.setLocation(ev.getXOnScreen()-img.getWidth()/2, ev.getYOnScreen()-img.getHeight()/2);
+                    detail.setVisible(true);
+                }
             }
-            pressedX = ev.getX();
-            pressedY = ev.getY();
+        }
+        
+        @Override
+        public void mouseReleased(MouseEvent ev) {
+            if (SwingUtilities.isMiddleMouseButton(ev)) {
+                if (detail != null) {
+                    detail.dispose();
+                    detail = null;
+                }
+            }
         }
 
         @Override
         public void mouseDragged(MouseEvent ev) {
-            if (!SwingUtilities.isLeftMouseButton(ev)) {
-                return;
+            if (SwingUtilities.isLeftMouseButton(ev)) {
+                gameX += ev.getX() - pressedX;
+                gameY += ev.getY() - pressedY;
+                if (gameX < getParent().getWidth() - getWidth()) {
+                    gameX = getParent().getWidth() - getWidth();
+                }
+                if (gameX > 0) {
+                    gameX = 0;
+                }
+                if (gameY < getParent().getHeight() - getHeight()) {
+                    gameY = getParent().getHeight() - getHeight();
+                }
+                if (gameY > 0) {
+                    gameY = 0;
+                }
+                setLocation(gameX, gameY);
             }
-            gameX += ev.getX() - pressedX;
-            gameY += ev.getY() - pressedY;
-            if (gameX < getParent().getWidth() - getWidth()) {
-                gameX = getParent().getWidth() - getWidth();
-            }
-            if (gameX > 0) {
-                gameX = 0;
-            }
-            if (gameY < getParent().getHeight() - getHeight()) {
-                gameY = getParent().getHeight() - getHeight();
-            }
-            if (gameY > 0) {
-                gameY = 0;
-            }
-            setLocation(gameX, gameY);
         }
     }
 }
