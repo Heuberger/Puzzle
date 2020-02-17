@@ -25,8 +25,8 @@ public class MaskPiece extends Piece {
                      BufferedImage msk, 
                      BufferedImage img, 
                      int ix, int iy, 
-                     int r) {
-        super(x, y, dir);
+                     int r, boolean border) {
+        super(x, y, dir, border);
         mask = msk;
         image = img;
         imgX = ix;

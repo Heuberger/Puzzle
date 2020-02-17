@@ -18,8 +18,8 @@ public class MaskPieceDebug extends MaskPiece {
                      int ix, int iy, 
                      int r, 
                      Rectangle b, 
-                     Polygon shp) {
-        super(x, y, dir, msk, img, ix, iy, r);
+                     Polygon shp, boolean border) {
+        super(x, y, dir, msk, img, ix, iy, r, border);
         base = b;
     }
     

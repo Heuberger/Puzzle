@@ -164,6 +164,7 @@ public class GamePanel extends JPanel implements GameListener {
         menu.addSeparator();
         menu.add(newMenuItem("Debug", this::doDebug));
         menu.addSeparator();
+        menu.add(newMenuItem("Border", this::doBorder));
         
         return menu;
     }
@@ -443,6 +444,12 @@ public class GamePanel extends JPanel implements GameListener {
             }
             System.out.println();
         }
+    }
+    
+    private void doBorder(ActionEvent ev) {
+        pieces.forEach(Piece::unselect);
+        pieces.stream().filter(Piece::isBorder).forEach(Piece::select);
+        repaint();
     }
     
     protected void error(String title, Object... msg) {

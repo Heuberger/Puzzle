@@ -24,6 +24,7 @@ public abstract class Piece extends JComponent
 
     private final int tileX;
     private final int tileY;
+    private final boolean border;
     
     private Direction dir;
     
@@ -39,17 +40,18 @@ public abstract class Piece extends JComponent
     
     transient int id;
 
-    protected Piece(int x, int y) {
-        this(x, y, Direction.NORTH);
+    protected Piece(int x, int y, boolean border) {
+        this(x, y, Direction.NORTH, border);
     }
     
-    protected Piece(int x, int y, Direction d) {
+    protected Piece(int x, int y, Direction d, boolean border) {
         if (d == null)
             throw new IllegalArgumentException("null d");
         
         tileX = x;
         tileY = y;
         dir = d;
+        this.border = border;
         
         neighbours = new HashSet<Piece>();
         connected = new HashSet<Piece>();
@@ -151,6 +153,11 @@ public abstract class Piece extends JComponent
         return done;
     }
     
+    
+    public boolean isBorder() {
+        return border;
+    }
+    
     public void unselect( ) {
         selected = false;
     }
@@ -158,6 +165,7 @@ public abstract class Piece extends JComponent
     public void select() {
         selected = true;
     }
+
     public boolean isSelected() {
         return selected;
     }

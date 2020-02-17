@@ -10,8 +10,8 @@ public class ImagePiece extends Piece {
     
     private final BufferedImage image;
     
-    public ImagePiece(int x, int y, BufferedImage img) {
-        super(x, y);
+    public ImagePiece(int x, int y, BufferedImage img, boolean border) {
+        super(x, y, border);
         image = img;
         setSize(img.getWidth(), img.getHeight());
     }
