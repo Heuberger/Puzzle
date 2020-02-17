@@ -16,6 +16,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -151,30 +152,18 @@ public class GamePanel extends JPanel implements GameListener {
     }
 
     protected JPopupMenu createPopup() {
-        JMenuItem home = new JMenuItem("Home");
-        home.addActionListener(this::doHome);
-        
-        JMenuItem arrange = new JMenuItem("Arrange");
-        arrange.addActionListener(this::doArrange);
-        
-        showMenuItem = new JMenuItem("Show");
-        showMenuItem.addActionListener(this::doShow);
+        showMenuItem = newMenuItem("Show", this::doShow);
         showMenuItem.setEnabled(image != null);
-        
-        JMenuItem bg = new JMenuItem("Background");
-        bg.addActionListener(this::doBackground);
-        
-        JMenuItem debug = new JMenuItem("Debug");
-        debug.addActionListener(this::doDebug);
         
         JPopupMenu menu = new JPopupMenu();
         menu.add(showMenuItem);
-        menu.add(bg);
-        menu.add(home);
+        menu.add(newMenuItem("Background", this::doBackground));
+        menu.add(newMenuItem("Home", this::doHome));
         menu.addSeparator();
-        menu.add(arrange);
+        menu.add(newMenuItem("Arrange", this::doArrange));
         menu.addSeparator();
-        menu.add(debug);
+        menu.add(newMenuItem("Debug", this::doDebug));
+        menu.addSeparator();
         
         return menu;
     }
@@ -458,6 +447,12 @@ public class GamePanel extends JPanel implements GameListener {
     
     protected void error(String title, Object... msg) {
         showMessageDialog(getParent(), msg, title, ERROR_MESSAGE);
+    }
+    
+    private JMenuItem newMenuItem(String text, ActionListener listener) {
+        JMenuItem item = new JMenuItem(text);
+        item.addActionListener(listener);
+        return item;
     }
     
     private static boolean isCtrl(ActionEvent ev) {
