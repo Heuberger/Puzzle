@@ -158,8 +158,13 @@ public abstract class Piece extends JComponent
     public void select() {
         selected = true;
     }
+    
     public boolean isSelected() {
         return selected;
+    }
+    
+    public int order() {
+        return 0;
     }
 
     public synchronized void addGameListener(GameListener l) {

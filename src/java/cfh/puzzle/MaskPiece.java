@@ -21,6 +21,8 @@ public class MaskPiece extends Piece {
     private Image lastImage = null;
     private Direction lastDir = null;
     
+    private int order = 0;
+    
     public MaskPiece(int x, int y, Direction dir, 
                      BufferedImage msk, 
                      BufferedImage img, 
@@ -49,6 +51,8 @@ public class MaskPiece extends Piece {
         Direction dir = getDir();
         int tx;
         int ty;
+        order = 0;
+        float[] hsb = Color.RGBtoHSB(0, 0, 0, null);
         for (int x = 0, ix = imgX; x < width; x++, ix++) {
             for (int y = 0, iy = imgY; y < height; y++, iy++) {
                 switch (dir) {
@@ -107,7 +111,10 @@ public class MaskPiece extends Piece {
                         }
                         break;
                 }
-                img.setRGB(tx, ty, DEF_COL_MOD.getDataElement(icomp, 0));
+                int rgb = DEF_COL_MOD.getDataElement(icomp, 0);
+                img.setRGB(tx, ty, rgb);
+                Color.RGBtoHSB(DEF_COL_MOD.getRed(rgb), DEF_COL_MOD.getGreen(rgb), DEF_COL_MOD.getBlue(rgb), hsb);
+                order += (int)(hsb[2] * 200);
             }
         }
         lastImage = img;
@@ -180,5 +187,10 @@ public class MaskPiece extends Piece {
         }
         return (tx >= 0) && (tx < mask.getWidth()) && (ty >= 0) && (ty < mask.getHeight()) &&
             (DEF_COL_MOD.getAlpha(mask.getRGB(tx, ty)) > 0);
+    }
+    
+    @Override
+    public int order() {
+        return order;
     }
 }

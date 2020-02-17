@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -326,6 +327,35 @@ public class GamePanel extends JPanel implements GameListener {
                     }
                 }
             }
+        } else if (isShift(ev)) {
+            pieces.sort(Comparator.comparingInt(Piece::order));
+            int w = getParent().getWidth();
+            int h = getParent().getHeight();
+            int i = 0;
+            int j = 0;
+            int x0 = 15 - getX();
+            int y0 = 15 - getY();
+            for (Piece piece : pieces) {
+                if (!piece.getConnected().isEmpty())
+                    continue;
+                if (!all && !piece.isSelected())
+                    continue;
+
+                int x = x0 + i*(sizeX+20) + 5*(j%2);
+                int y = y0 + j*(sizeY+20) + 5*(i%2);
+                piece.setLocation(x, y);
+
+                j += 1;
+                if (y + sizeY + piece.getHeight() > h - getY()) {
+                    j = 0;
+                    i += 1;
+                    if (x + sizeX + piece.getWidth() > w - getX()) {
+                        x0 += 16;
+                        y0 += 16;
+                        i = 0;
+                    }
+                }
+            }
         } else {
             int w = getParent().getWidth();
             int h = getParent().getHeight();
@@ -453,6 +483,10 @@ public class GamePanel extends JPanel implements GameListener {
         JMenuItem item = new JMenuItem(text);
         item.addActionListener(listener);
         return item;
+    }
+    
+    private static boolean isShift(ActionEvent ev) {
+        return (ev.getModifiers() & ev.SHIFT_MASK) != 0;
     }
     
     private static boolean isCtrl(ActionEvent ev) {
