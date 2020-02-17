@@ -44,7 +44,7 @@ import cfh.FileChooser;
 
 public class Test extends GamePanel {
 
-    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.02";
+    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.03";
     
     private static final int MAXX = 5000;
     private static final int MAXY = 4000;
