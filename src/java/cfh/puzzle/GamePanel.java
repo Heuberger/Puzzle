@@ -48,6 +48,8 @@ public class GamePanel extends JPanel implements GameListener {
 
     static final int DELTA_SNAP = 8;
 
+    private final Sound sound = new Sound();
+    
     private final String title;
     private BufferedImage image = null;
     private BufferedImage background = null;
@@ -93,9 +95,8 @@ public class GamePanel extends JPanel implements GameListener {
                     actualGroup = ch;
                     groups.put(ch, pieces.stream().filter(Piece::isSelected).collect(toList()));
                     repaint();
-                    Toolkit.getDefaultToolkit().beep();
-                }
-                if (shift && (mark || ch == KEY_NO_GROUP)) {
+                    sound.groupCopy();
+                } else if (shift && (mark || ch == KEY_NO_GROUP)) {
                     if (actualGroup != KEY_NO_GROUP) {
                         groups.put(actualGroup, pieces.stream().filter(Piece::isSelected).collect(toList()));
                     }
@@ -103,16 +104,17 @@ public class GamePanel extends JPanel implements GameListener {
                     pieces.stream().forEach(Piece::unselect);
                     groups.getOrDefault(ch, emptyList()).stream().forEach(Piece::select);
                     repaint();
-                    Toolkit.getDefaultToolkit().beep();
+                    sound.groupSelect();
                 } else if (ctrl && mark) {
                     putBookmark(ch, actual);
-                    Toolkit.getDefaultToolkit().beep();
+                    sound.posMark();
                 } else if (!shift && !ctrl && (mark || ch == KEY_HISTORY)) {
                     Point p = bookmarks.get(ch);
                     if (p != null) {
                         putBookmark(KEY_HISTORY, actual);
                         setLocation(p);
                         repaint();
+                        sound.posSet();
                     }
                 }
             }
@@ -222,7 +224,10 @@ public class GamePanel extends JPanel implements GameListener {
                 p.setLocation(p.getX()+dx, p.getY()+dy);
             }
             piece.connect(next);
-            Toolkit.getDefaultToolkit().beep();
+            sound.pieceJoin();
+            if (piece.getGroup().size() == pieces.size()) {
+                sound.complete();
+            }
         }
     }
 
@@ -236,6 +241,7 @@ public class GamePanel extends JPanel implements GameListener {
             }
             piece.setLocation(piece.getX()+2*DELTA_SNAP, piece.getY()+2*DELTA_SNAP);
             pieceSelected(piece);
+            sound.pieceDisconnect();
         }
     }
 

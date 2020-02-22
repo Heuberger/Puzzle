@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ import cfh.FileChooser;
 
 public class Test extends GamePanel {
 
-    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.03";
+    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.04";
     
     private static final int MAXX = 5000;
     private static final int MAXY = 4000;
@@ -95,9 +96,19 @@ public class Test extends GamePanel {
                 imageName = "none";
             } else {
                 URL url;
-                url = Test.class.getResource(arg);
-                if (url == null && arg.charAt(0) != '/') {
-                    url = Test.class.getResource("resources/" + arg);
+                if (arg.startsWith("http")) {
+                    try {
+                        url = new URL(arg);
+                    } catch (MalformedURLException ex) {
+                        ex.printStackTrace();
+                        errorMessage(ex, arg);
+                        return;
+                    }
+                } else {
+                    url = Test.class.getResource(arg);
+                    if (url == null && arg.charAt(0) != '/') {
+                        url = Test.class.getResource("resources/" + arg);
+                    }
                 }
                 if (url == null) {
                     try {
