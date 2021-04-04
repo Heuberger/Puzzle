@@ -1,26 +1,67 @@
 package cfh.puzzle;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public interface Size extends Serializable {
+public abstract class Size {
 
-    public int getCount();
+    private transient int width;
+    private transient int height;
     
-    public int getSizeX();
-    public int getSizeY();
+    public static Size read(ObjectInputStream input) throws IOException {
+        String name = input.readUTF();
+        switch (name) {
+            case "TemplateSizeImpl": return TemplateSizeImpl.read0(input);
+            default: throw new IOException("unhandled Size type: " + name);
+        }
+    }
+    
+    
+    protected Size() {
+    }
 
-    public int getOverlap();
-    public int getBaseVariation();
+    public final void write(ObjectOutputStream output) throws IOException {
+        output.writeUTF(getClass().getSimpleName());
+        write0(output);
+    }
 
-    public int getBorderWidth();
-
-    public int getPegWidth();
-    public int getPegLength();
-    public int getPegRadius();
-
-    public int getPegPositionDelta();
-    public int getPegRadiusDelta();
-    public int getPegHeightDelta();
-
-    public int getEdgeColorChange();
+    public abstract int getCount();
+    public abstract int getSizeX();
+    public abstract int getSizeY();
+    
+    public abstract int getOverlap();
+    public abstract int getBaseVariation();
+    
+    public abstract int getBorderWidth();
+    
+    public abstract int getPegWidth();
+    public abstract int getPegLength();
+    public abstract int getPegRadius();
+    
+    public abstract int getPegPositionDelta();
+    public abstract int getPegRadiusDelta();
+    public abstract int getPegHeightDelta();
+    
+    public abstract int getEdgeColorChange();
+    
+    protected abstract void write0(ObjectOutputStream out) throws IOException;
+    
+    void width(int width) {
+        this.width= width;
+    }
+    
+    public int width() {
+        return width;
+    }
+    
+    void height(int height) {
+        this.height = height;
+    }
+    
+    public int height() {
+        return height;
+    }
+    
+    
 }

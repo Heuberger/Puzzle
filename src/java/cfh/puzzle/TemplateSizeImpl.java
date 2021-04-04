@@ -1,14 +1,30 @@
 package cfh.puzzle;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public class TemplateSizeImpl implements Size {
+public class TemplateSizeImpl extends Size {
 
     private final int count;
     private final Template template;
 
+    protected static TemplateSizeImpl read0(ObjectInputStream input) throws IOException {
+        int count = input.readInt();
+        Template template = Template.read(input);
+        return new TemplateSizeImpl(count, template);
+    }
+    
+    
     TemplateSizeImpl(int count, Template template) {
         this.count = count;
         this.template = template;
+    }
+
+    @Override
+    protected void write0(ObjectOutputStream output) throws IOException {
+        output.writeInt(count);
+        template.write(output);
     }
     
     @Override

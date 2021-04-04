@@ -1,8 +1,10 @@
 package cfh.puzzle;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public abstract class Template implements Serializable {
+public abstract class Template {
 
     public static Template get(String name) {
 		switch (name) {
@@ -15,6 +17,17 @@ public abstract class Template implements Serializable {
 		}
 	}
 	
+    public static Template read(ObjectInputStream input) throws IOException {
+        String name = input.readUTF();
+        return get(name);
+    }
+    
+    protected Template() {
+    }
+    
+    public void write(ObjectOutputStream output) throws IOException {
+        output.writeUTF(getClass().getSimpleName().substring(8));
+    }
 	
     public abstract int getSizeX();
     public abstract int getSizeY();

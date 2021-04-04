@@ -45,7 +45,7 @@ import cfh.FileChooser;
 
 public class Test extends GamePanel {
 
-    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.04";
+    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.05";
     
     private static final int MAXX = 5000;
     private static final int MAXY = 4000;
@@ -150,14 +150,14 @@ public class Test extends GamePanel {
                         if (magic == MAGIC) {
                             int type = input.readInt();
                             long seed = input.readLong();
-                            Size size = (Size) input.readObject();
+                            Size size = Size.read(input);
                             image = decodeImage(input);
                             Test test = new Test(type, image, size, seed, file.getAbsolutePath());
                             test.load(input);
                         } else {
                             errorMessage("unable to load image from", imageName);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
+                    } catch (IOException ex) {
                         ex.printStackTrace();
                         errorMessage(ex, "reading from", file.getAbsolutePath());
                     }
@@ -250,7 +250,7 @@ public class Test extends GamePanel {
 	}
 
 
-    private static final int MAGIC = 0x55F0_0102;
+    private static final int MAGIC = 0x55F0_0105;
 	
     private final Size puzzleSize;
     private final int type;
@@ -279,7 +279,7 @@ public class Test extends GamePanel {
         setOpaque(false);
         setSize(MAXX, MAXY);
         
-        frame = new JFrame(VERSION + " - " + title);
+        frame = new JFrame(String.format("%s - %s - %d (%dx%d)", VERSION, title, size.width()*size.height(), size.width(), size.height()));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -317,7 +317,7 @@ public class Test extends GamePanel {
                 output.writeInt(MAGIC);
                 output.writeInt(type);
                 output.writeLong(seed);
-                output.writeObject(puzzleSize);
+                puzzleSize.write(output);
                 encodeImage(image, output);
                 save(output);
             } catch (Exception ex) {
@@ -447,6 +447,9 @@ public class Test extends GamePanel {
                 }
             }
         }
+        
+        puzzleSize.width(X);
+        puzzleSize.height(Y);
         
         setImage(image);
 

@@ -1,6 +1,9 @@
 package cfh.puzzle;
 
-public class ConstSizeImpl implements Size {
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+public class ConstSizeImpl extends Size {
 
     private final int count;
     private final int sizeX;
@@ -45,7 +48,12 @@ public class ConstSizeImpl implements Size {
         this.pegHeightDelta = pegHeightDelta;
         this.edgeColorChange = edgeColorChange;
     }
-    
+
+    @Override
+    protected void write0(ObjectOutputStream out) throws IOException {
+        throw new IOException("not implemented");
+    }
+
     @Override
     public int getCount() {
         return count;
