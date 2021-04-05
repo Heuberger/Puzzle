@@ -1,1 +1,1 @@
-@java -jar puzzle.jar edtq.jpg 200x55
+@java -jar puzzle.jar kirche.jpg 200x60

@@ -8,6 +8,7 @@ public abstract class Template {
 
     public static Template get(String name) {
 		switch (name) {
+		    case "40": return new Template40();
 			case "50": return new Template50(); 
 			case "55": return new Template55(); 
 			case "60": return new Template60(); 

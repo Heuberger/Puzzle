@@ -37,6 +37,7 @@ public class SizePanel {
         countLabel.setLabelFor(countField);
         
         templateBox = new JComboBox<String>();
+        templateBox.addItem("40");
         templateBox.addItem("50");
         templateBox.addItem("55");
         templateBox.addItem("60");

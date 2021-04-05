@@ -1,4 +1,5 @@
 # Puzzle
+
 My jigsaw puzzle
 
 Just for doing some tests... work in progress.
@@ -7,33 +8,42 @@ Just for doing some tests... work in progress.
 
 ## Instructions
 
-Open an image to create a new puzzle
+Open an image file to create a new puzzle
 or
 open a previously saved puzzle to continue playing.
 
-**Moving Pieces**
+*Note:* puzzles are **not saved** automatically!
 
-* Use the `LEFT` button to drag&drop pieces. 
+#### Moving Pieces
+
+* Use the `LEFT` button to drag and drop pieces. 
   If a piece is dropped near the correct neighbour(s), the pieces will snap together.
 * Hold the `CTRL` Key and click on a connected piece to disconnect it.
 * Use the scroll wheel or double-click (`LEFT` or `RIGHT` button) to rotate the piece(s) under the cursor.
 
-**General**
-* `RIGHT` click to open menu.
+#### General
+
+* `RIGHT` click background to open menu.
 * Use `LEFT` button on background to drag the whole surface.
 * `CTRL`-digit or `CTRL`-letter to save current surface position under that key. 
-  Digit or Letter to move to the corresponding saved position.
+  The corresponding digit or letter, without `CTRL`, to move to the corresponding saved position.
 * `BACKSPACE` to move back to last position.
 
-**Marking**
+#### Marking
 
-The `Arrange` menu point will only work on unconnected marked pieces if a Mark-Group is set. 
-If no piece is marked and no Mark-Group is selected, it will arrange all unconnected pieces.
+Marked (selected) pieces can be rearranged by selecting the `Arrange` menu point. If no pieces are marked, all pieces will be rearranged. Connected pieces are never rearranged. The pieces will be arranged horizontally starting at the current location, or vertically if the `CTRL` key is pressed when the menu is selected.
 
-* Pieces can be marked (selected) and unmarked by `SHIFT-LEFT` clicking on them.
-* The Mark-Group can be set by `SHIFT`-letter or `SHIFT`-digit and will be displayed on top left.
-  `SHIFT-SPACE` to select no group.
+* Pieces can be marked (selected) and unmarked by `SHIFT-LEFT`-clicking on them.
+* Use `SHIFT-SPACE` to unmark all pieces.
 
+#### Selection Group
 
+Pieces can be grouped together in Selection Groups named by a digit or letter. Activating such group will mark the pieces of that group. While the group is active, marking/unmarking a piece will add/remove that piece from that group.
 
-*Note:* puzzles are **not saved** automatically!
+- `SHIFT`-digit or `SHIFT`-letter to activate Selection Group.
+- `SHIFT`-`SPACE` to deactivate any group and unmark all pieces.
+- `CTRL`-`SHIFT`-digit or `CTRL`-`SHIFT`-letter to save the actually marked pieces to a Selection Group.
+
+#### Background
+
+Selecting the `Background` menu option, a background image can be loaded. A color can be chosen, by entering `color` as file name.
