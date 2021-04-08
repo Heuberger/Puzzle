@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -45,7 +44,7 @@ import cfh.FileChooser;
 
 public class Test extends GamePanel {
 
-    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.05";
+    private static final String VERSION = "Puzzle by Carlos F. Heuberger - test v0.06";
     
     private static final int MAXX = 5000;
     private static final int MAXY = 4000;
@@ -131,11 +130,8 @@ public class Test extends GamePanel {
                 }
             }
         } else {
-            FileChooser chooser = new FileChooser();
-            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            chooser.setMultiSelectionEnabled(false);
-            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
+            File file = new FileChooser("puzzle").getFileToLoad(null);
+            if (file != null) {
                 imageName = file.getAbsolutePath();
                 try {
                 	image = ImageIO.read(file);
@@ -300,19 +296,8 @@ public class Test extends GamePanel {
     }
     
     private void doSave(ActionEvent ev) {
-        FileChooser chooser = new FileChooser();
-        if (chooser.showSaveDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            Object[] msg = { "File already exists!", file.getAbsolutePath(), "Overwrite?" };
-            if (file.exists() && showConfirmDialog(getParent(), msg, "Confirm", OK_CANCEL_OPTION) != OK_OPTION)
-                return;
-            if (file.exists()) {
-                File bak = new File(file.getParentFile(), file.getName() + ".bak");
-                if (bak.exists()) {
-                    bak.delete();
-                }
-                file.renameTo(bak);
-            }
+        File file = new FileChooser("puzzle").getFileToSave(getParent());
+        if (file != null) {
             try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file))) {
                 output.writeInt(MAGIC);
                 output.writeInt(type);

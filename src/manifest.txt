@@ -1,3 +1,6 @@
 Manifest-Version: 1.0
 Main-Class: cfh.puzzle.Test
-Implementation-Vendor: Carlos Heuberger
+Implementation-Vendor: Carlos F. Heuberger
+Implementation-Version: 0.06
+Permissions: all-permissions
+

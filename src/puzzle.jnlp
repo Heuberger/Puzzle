@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp 
+        spec="1.0+"
+	codebase="https://heuberger.github.io/Puzzle/"
+        href="puzzle.jnlp">
+    <information>
+        <title>Jigsaw Puzzle</title>
+        <vendor>Carlos F. Heuberger</vendor>
+	<homepage href="https://heuberger.github.io/Puzzle/" />
+        <offline-allowed/>
+    </information>
+
+    <security>
+        <all-permissions/>
+    </security>
+
+    <resources>
+        <!-- Application Resources -->
+        <j2se version="1.8+"
+              href="http://java.sun.com/products/autodl/j2se"/>
+        <jar href="puzzle.jar" />
+    </resources>
+ 
+    <application-desc
+         name="Jigsaw Puzzle Application"
+         main-class="cfh.puzzle.Test">
+     </application-desc>
+</jnlp>
