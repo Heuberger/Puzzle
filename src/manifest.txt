@@ -3,4 +3,8 @@ Main-Class: cfh.puzzle.Test
 Implementation-Vendor: Carlos F. Heuberger
 Implementation-Version: 0.06
 Permissions: all-permissions
+Codebase: heuberger.github.io/Puzzle
+Application-Name: Jigsaw Puzzle
+Trusted-Only: true
+Trusted-Library: true
 
