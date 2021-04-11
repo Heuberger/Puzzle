@@ -7,7 +7,15 @@
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>
 	<homepage href="https://heuberger.github.io/Puzzle/" />
+	<description>Jigsaw Puzzle Game</description>
+	<description kind="short">An application to create and play Jigsaw puzzles.</description>
+        <icon href="icon.png"/>
+        <icon kind="splash" href="splash.png"/>
         <offline-allowed/>
+        <shortcut online="true" install="true">
+          <desktop/>
+          <menu/>
+        </shortcut>
     </information>
 
     <security>
@@ -22,7 +30,7 @@
     </resources>
  
     <application-desc
-         name="Jigsaw Puzzle Application"
+         name="Jigsaw Puzzle"
          main-class="cfh.puzzle.Test">
      </application-desc>
 </jnlp>

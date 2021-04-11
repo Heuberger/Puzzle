@@ -2,9 +2,10 @@ Manifest-Version: 1.0
 Main-Class: cfh.puzzle.Test
 Implementation-Vendor: Carlos F. Heuberger
 Implementation-Version: 0.06
+SplashScreen-Image: cfh/puzzle/resources/splash.png
 Permissions: all-permissions
-Codebase: heuberger.github.io/Puzzle
 Application-Name: Jigsaw Puzzle
+Codebase: heuberger.github.io/Puzzle
 Trusted-Only: true
 Trusted-Library: true
 

@@ -5,6 +5,7 @@ import static javax.swing.JOptionPane.*;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -64,7 +65,7 @@ public class Test extends GamePanel {
         String imageName;
         BufferedImage image = null;
         int index = 0;
-        
+
         while (index < args.length && args[index].startsWith("-")) {
             String opt = args[index++].substring(1);
             if (opt.length() == 0) {
@@ -277,6 +278,17 @@ public class Test extends GamePanel {
         
         frame = new JFrame(String.format("%s - %s - %d (%dx%d)", VERSION, title, size.width()*size.height(), size.width(), size.height()));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        URL url = Test.class.getResource("resources/icon.png");
+        if (url == null) {
+            System.err.println("unable to load \"resources/icon.png\"");
+        } else {
+            try {
+                Image icon = ImageIO.read(url);
+                frame.setIconImage(icon);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent ev) {
