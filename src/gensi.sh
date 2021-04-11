@@ -1,21 +1,13 @@
-if [ "$KPR" == "" ] || [ "$KP" == "" ]
-then
-    echo "Please set KPR and KP"
-    return
-fi
+. init.sh
 
-JKR="cfhca.jks"
-JKS="cfhsi.jks"
-DN="CN=CFH Signature, O=Carlos F Heuberger, C=DE"
+KR="keytool -keystore $JKS_R -storepass:env PASS_R -alias $ALIAS_R"
+KS="keytool -keystore $JKS_S -storepass:env PASS_S -alias $ALIAS_S"
 
-KR="keytool -keystore $JKR -storepass:env KPR -alias cfhca"
-KS="keytool -keystore $JKS -storepass:env KP  -alias cfhsi"
+rm $JKS_S
 
-rm $JKS
-
-$KS -importcert -alias cfhca -file cfhca.csr -noprompt
-$KS -genkeypair -keyalg RSA -keysize 2048 -dname "$DN" -validity 1826
+$KS -importcert -alias $ALIAS_R -file $CERT_R -noprompt
+$KS -genkeypair -keyalg RSA -keysize 2048 -dname "$DNAME_S" -validity 1826
 $KS -certreq | $KR -gencert -ext ku:c=dig -ext eku:c=code -validity 1826 -rfc | $KS -importcert
-$KS -exportcert -file cfhsi.csr
+$KS -exportcert -file $CERT_S
 $KS -list -v
 

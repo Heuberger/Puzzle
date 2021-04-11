@@ -1,18 +1,11 @@
-if [ "$KPR" == "" ] || [ "$KP" == "" ]
-then
-    echo "Please set KPR and KP"
-    return
-fi
+. init.sh
 
-JKR=cfhca.jks
-DN="CN=CFH Root CA, O=Carlos F Heuberger, C=DE"
+KR="keytool -keystore $JKS_R -storepass:env PASS_R -alias $ALIAS_R"
 
-KR="keytool -keystore $JKR -storepass:env KPR -alias cfhca"
+rm $JKS_R
 
-rm $JKR
-
-$KR -genkeypair -keyalg RSA -keysize 2048 -dname "$DN" -ext bc:c -ext ku:c=keyCertSign,cRLSign -validity 3653
-$KR -exportcert -file cfhca.csr
+$KR -genkeypair -keyalg RSA -keysize 4096 -dname "$DNAME_R" -ext bc:c -ext ku:c=keyCertSign,cRLSign -validity 3653
+$KR -exportcert -file $CERT_R
 $KR -list -v
 
 . gensi.sh
