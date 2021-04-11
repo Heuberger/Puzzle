@@ -1,1 +1,1 @@
-coming *soon*, check main [README](../README.md) for now
+coming *soon*, check main [README](https://github.com/Heuberger/Puzzle/) for now
