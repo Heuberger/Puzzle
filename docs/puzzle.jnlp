@@ -18,6 +18,8 @@
         </shortcut>
     </information>
 
+    <update check="background" policy="always"/>
+
     <security>
         <all-permissions/>
     </security>
