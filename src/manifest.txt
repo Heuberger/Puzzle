@@ -5,7 +5,5 @@ Implementation-Version: 0.06
 SplashScreen-Image: cfh/puzzle/resources/splash.png
 Permissions: all-permissions
 Application-Name: Jigsaw Puzzle
-Codebase: heuberger.github.io/Puzzle
-Trusted-Only: true
-Trusted-Library: true
+Codebase: heuberger.github.io
 
