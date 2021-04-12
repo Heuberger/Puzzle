@@ -2,7 +2,8 @@
 <jnlp 
         spec="1.0+"
 	codebase="https://heuberger.github.io/Puzzle/"
-        href="puzzle.jnlp">
+	href="puzzle.jnlp"
+	version="0.06.03">
     <information>
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>
@@ -28,8 +29,7 @@
         <!-- Application Resources -->
         <j2se version="1.8+"
               href="http://java.sun.com/products/autodl/j2se"/>
-        <jar href="puzzle.jar" version="0.06.02"/>
-        <property name="jnlp.versionEnabled" value="true"/>
+        <jar href="puzzle.jar"/>
     </resources>
  
     <application-desc
