@@ -4,13 +4,23 @@
 
 *use at your own risk - no warranties!*
 
+
+
+## Java Web Start
+
+Select:   [puzzle.jnlp](puzzle.jnlp) 
+
+This should start the application, if Java Web Start is correctly working;
+
+otherwise the file is downloaded and must be started by double-click.
+
+
+
 ## Requirements
 
 Java 8 (`JRE8`) must be installed. Version `8u202` is recommended, license of newer versions have changed - please check! It can be found at [Java Archive](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html).
 
-## Java Web Start
 
-Download and execute: [puzzle.jnlp](puzzle.jnlp).
 
 ## How to Play
 

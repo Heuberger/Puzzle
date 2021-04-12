@@ -12,7 +12,7 @@
         <icon href="icon.png"/>
         <icon kind="splash" href="splash.png"/>
         <offline-allowed/>
-        <shortcut online="true" install="true">
+        <shortcut online="false" install="false">
           <desktop/>
           <menu/>
         </shortcut>
