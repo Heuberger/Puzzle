@@ -1,2 +1,2 @@
 @set /p image=Image address: 
-@java -jar puzzle.jar %image%
+@start javaw -jar puzzle.jar %image%
