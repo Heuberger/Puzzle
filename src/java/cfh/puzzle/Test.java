@@ -45,7 +45,11 @@ import cfh.FileChooser;
 
 public class Test extends GamePanel {
 
-    private static final String VERSION = "Puzzle by Carlos F. Heuberger - test v0.06";
+    private static final String VERSION;
+    static {
+        String version = Test.class.getPackage().getImplementationVersion();
+        VERSION = "Puzzle by Carlos F. Heuberger - v" + (version==null ? "?" : version);
+    }
     
     private static final int MAXX = 5000;
     private static final int MAXY = 4000;

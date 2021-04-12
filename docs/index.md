@@ -2,7 +2,7 @@
 
 ![splash](splash.png)
 
-*use at your own risk - no warranties!*
+*use at your own risk - no warranties!*  v0.06.02
 
 
 

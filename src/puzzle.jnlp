@@ -6,7 +6,7 @@
     <information>
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>
-	<homepage href="https://heuberger.github.io/Puzzle/" />
+	<homepage href="https://heuberger.github.io/Puzzle/"/>
 	<description>Jigsaw Puzzle Game</description>
 	<description kind="short">An application to create and play Jigsaw puzzles.</description>
         <icon href="icon.png"/>
@@ -18,7 +18,7 @@
         </shortcut>
     </information>
 
-    <update check="background" policy="always"/>
+    <update check="timeout" policy="prompt-update"/>
 
     <security>
         <all-permissions/>
@@ -28,7 +28,8 @@
         <!-- Application Resources -->
         <j2se version="1.8+"
               href="http://java.sun.com/products/autodl/j2se"/>
-        <jar href="puzzle.jar" />
+        <jar href="puzzle.jar" version="0.06.02"/>
+        <property name="jnlp.versionEnabled" value="true"/>
     </resources>
  
     <application-desc
