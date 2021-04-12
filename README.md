@@ -10,9 +10,14 @@ Just for doing some tests... work in progress.
 
 ## Instructions
 
+### Java Web Start
+
+- `puzzle.jnlp` is available in `/src`
+  copy into `/docs`
+
 ### Pictures
 
-Originals are available under `src/pics` as Gimp files.
+Originals are available under `/src/pics` as Gimp files.
 
 - `icon.png`
   scaled to 32x32

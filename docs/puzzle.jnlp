@@ -2,7 +2,8 @@
 <jnlp 
         spec="1.0+"
 	codebase="https://heuberger.github.io/Puzzle/"
-        href="puzzle.jnlp">
+	href="puzzle.jnlp"
+	version="0.06.01">
     <information>
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>
@@ -12,7 +13,7 @@
         <icon href="icon.png"/>
         <icon kind="splash" href="splash.png"/>
         <offline-allowed/>
-        <shortcut online="false" install="false">
+        <shortcut online="true" install="true">
           <desktop/>
           <menu/>
         </shortcut>
