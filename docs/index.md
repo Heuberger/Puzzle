@@ -22,6 +22,8 @@ Select:   [puzzle.jnlp](puzzle.jnlp)
 This should start the application, if Java Web Start is working correctly; 
 otherwise the file is downloaded and must be started by double-click.
 
+Java security needs the installation of 2 certificates to validate the download: if needed, download [here](https://cheuberger.github.io/keys/).
+
 
 
 ### Java (WIP)
