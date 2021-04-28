@@ -6,19 +6,33 @@
 
 
 
-## Java Web Start
+## Running
+
+There are basically two ways to execute the game:
+
+1. `Java Web Start` - complicated but includes automatic updates, desktop shortcut
+2. `local` - just no updates or desktop shortcut, but easy
+
+
+
+### Java Web Start
 
 Select:   [puzzle.jnlp](puzzle.jnlp) 
 
-This should start the application, if Java Web Start is correctly working;
-
+This should start the application, if Java Web Start is working correctly; 
 otherwise the file is downloaded and must be started by double-click.
+
+
+
+### Java (WIP)
+
+Download the whole content from the `dist` folder. Start any batch file (e.g. `bus.bat`) or just start (double-click) `puzzle.jar` (command line `java -jar puzzle.jar`).
 
 
 
 ## Requirements
 
-Java 8 (`JRE8`) must be installed. Version `8u202` is recommended, license of newer versions have changed - please check! It can be found at [Java Archive](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html).
+Java 8 (`JRE8`) must be installed. Version `8u202` is recommended, license of newer versions have changed - please check it yourself! Old versions can be found at [Java Archive](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html).
 
 
 
@@ -47,7 +61,7 @@ open a previously saved puzzle to continue playing.
 
 #### Marking
 
-Marked (selected) pieces can be rearranged by selecting the `Arrange` menu point. If no pieces are marked, all pieces will be rearranged. Connected pieces are never rearranged. The pieces will be arranged horizontally starting at the current location, or vertically if the `CTRL` key is pressed when the menu is selected.
+Marked (selected) pieces can be rearranged by selecting the `Arrange` menu point. If no pieces are marked and no selection group is active, all pieces will be rearranged. Connected pieces are never rearranged. The pieces will be arranged horizontally starting at the current location, or vertically if the `CTRL` key is pressed when the menu is selected.
 
 * Pieces can be marked (selected) and unmarked by `SHIFT-LEFT`-clicking on them.
 * Use `SHIFT-SPACE` to unmark all pieces.
@@ -62,4 +76,4 @@ Pieces can be grouped together in Selection Groups named by a digit or letter. A
 
 #### Background
 
-Selecting the `Background` menu option, a background image can be loaded. A color can be chosen, by entering `color` as file name.
+A background image can be loaded selecting the `Background` menu option. A color can be chosen instead of an image by entering `color` as file name.
