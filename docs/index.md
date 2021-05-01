@@ -2,7 +2,7 @@
 
 ![splash](splash.png)
 
-*use at your own risk - no warranties!*  v0.06.02
+*use at your own risk - no warranties!*  v0.07
 
 
 
@@ -10,7 +10,7 @@
 
 There are basically two ways to execute the game:
 
-1. `Java Web Start` - complicated but includes automatic updates, desktop shortcut
+1. `Java Web Start` - a bit complicated but includes automatic updates, desktop shortcut
 2. `local` - just no updates or desktop shortcut, but easy
 
 

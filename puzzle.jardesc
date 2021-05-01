@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
     <jar path="Puzzle/dist/puzzle.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/Puzzle/puzzle.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
@@ -12,5 +12,6 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <javaElement handleIdentifier="=Puzzle/src\/java"/>
+        <javaElement handleIdentifier="=Puzzle/src\/jnlp"/>
     </selectedElements>
 </jardesc>
