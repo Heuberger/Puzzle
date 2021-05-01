@@ -33,7 +33,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -322,24 +321,26 @@ public class GamePanel extends JPanel implements GameListener {
             int j = 0;
             int x0 = 15 - getX();
             int y0 = 15 - getY();
-            for (Piece piece : pieces) {
-                if (!piece.getConnected().isEmpty())
-                    continue;
-                if (!all && !piece.isSelected())
-                    continue;
+            synchronized (getTreeLock()) {
+                for (Piece piece : pieces) {
+                    if (!piece.getConnected().isEmpty())
+                        continue;
+                    if (!all && !piece.isSelected())
+                        continue;
 
-                int x = x0 + i*(sizeX+20) + 5*(j%2);
-                int y = y0 + j*(sizeY+20) + 5*(i%2);
-                piece.setLocation(x, y);
+                    int x = x0 + i*(sizeX+20) + 5*(j%2);
+                    int y = y0 + j*(sizeY+20) + 5*(i%2);
+                    piece.setLocation(x, y);
 
-                j += 1;
-                if (y + sizeY + piece.getHeight() > h - getY()) {
-                    j = 0;
-                    i += 1;
-                    if (x + sizeX + piece.getWidth() > w - getX()) {
-                        x0 += 16;
-                        y0 += 16;
-                        i = 0;
+                    j += 1;
+                    if (y + sizeY + piece.getHeight() > h - getY()) {
+                        j = 0;
+                        i += 1;
+                        if (!isShift(ev) && (x + sizeX + piece.getWidth() > w - getX())) {
+                            x0 += 16;
+                            y0 += 16;
+                            i = 0;
+                        }
                     }
                 }
             }
@@ -364,7 +365,7 @@ public class GamePanel extends JPanel implements GameListener {
                         if (x + pw > w - getX()) {
                             x = - getX() + delta;
                             y += ph;
-                            if (y + ph > h - getY()) {
+                            if (!isShift(ev) && (y + ph > h - getY())) {
                                 delta += 16;
                                 x += 16;
                                 y = - getY() + delta;
@@ -412,9 +413,8 @@ public class GamePanel extends JPanel implements GameListener {
     }
 
     private void doBackground(ActionEvent ev) {
-        FileChooser chooser = new FileChooser();
-        if (chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
+        File file = new FileChooser("background").getFileToLoad(getParent());
+        if (file != null) {
             if (file.isFile()) {
                 try {
                     BufferedImage img = ImageIO.read(file);
@@ -468,6 +468,10 @@ public class GamePanel extends JPanel implements GameListener {
     
     private static boolean isCtrl(ActionEvent ev) {
         return (ev.getModifiers() & ev.CTRL_MASK) != 0;
+    }
+    
+    private static boolean isShift(ActionEvent ev) {
+        return (ev.getModifiers() & ev.SHIFT_MASK) != 0;
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////

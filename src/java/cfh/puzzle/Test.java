@@ -5,6 +5,7 @@ import static javax.swing.JOptionPane.*;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -37,7 +38,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -45,7 +45,11 @@ import cfh.FileChooser;
 
 public class Test extends GamePanel {
 
-    private static final String VERSION = "Puzzle by Carlos Heuberger - test v0.05";
+    private static final String VERSION;
+    static {
+        String version = Test.class.getPackage().getImplementationVersion();
+        VERSION = "Puzzle by Carlos F. Heuberger - v" + (version==null ? "?" : version);
+    }
     
     private static final int MAXX = 5000;
     private static final int MAXY = 4000;
@@ -65,7 +69,7 @@ public class Test extends GamePanel {
         String imageName;
         BufferedImage image = null;
         int index = 0;
-        
+
         while (index < args.length && args[index].startsWith("-")) {
             String opt = args[index++].substring(1);
             if (opt.length() == 0) {
@@ -131,11 +135,8 @@ public class Test extends GamePanel {
                 }
             }
         } else {
-            FileChooser chooser = new FileChooser();
-            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            chooser.setMultiSelectionEnabled(false);
-            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
+            File file = new FileChooser("puzzle").getFileToLoad(null);
+            if (file != null) {
                 imageName = file.getAbsolutePath();
                 try {
                 	image = ImageIO.read(file);
@@ -281,6 +282,17 @@ public class Test extends GamePanel {
         
         frame = new JFrame(String.format("%s - %s - %d (%dx%d)", VERSION, title, size.width()*size.height(), size.width(), size.height()));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        URL url = Test.class.getResource("resources/icon.png");
+        if (url == null) {
+            System.err.println("unable to load \"resources/icon.png\"");
+        } else {
+            try {
+                Image icon = ImageIO.read(url);
+                frame.setIconImage(icon);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent ev) {
@@ -300,19 +312,8 @@ public class Test extends GamePanel {
     }
     
     private void doSave(ActionEvent ev) {
-        FileChooser chooser = new FileChooser();
-        if (chooser.showSaveDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            Object[] msg = { "File already exists!", file.getAbsolutePath(), "Overwrite?" };
-            if (file.exists() && showConfirmDialog(getParent(), msg, "Confirm", OK_CANCEL_OPTION) != OK_OPTION)
-                return;
-            if (file.exists()) {
-                File bak = new File(file.getParentFile(), file.getName() + ".bak");
-                if (bak.exists()) {
-                    bak.delete();
-                }
-                file.renameTo(bak);
-            }
+        File file = new FileChooser("puzzle").getFileToSave(getParent());
+        if (file != null) {
             try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file))) {
                 output.writeInt(MAGIC);
                 output.writeInt(type);

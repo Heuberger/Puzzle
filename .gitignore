@@ -4,6 +4,7 @@
 *.orig
 
 *.csr
+*.cer
 *.jks
 
 /build/

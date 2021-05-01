@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/jnlp/JNLP-INF/APPLICATION.JNLP</name>
+			<type>1</type>
+			<location>C:/CFH/eclipse/Puzzle/src/puzzle.jnlp</location>
+		</link>
+	</linkedResources>
 </projectDescription>

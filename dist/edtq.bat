@@ -1,1 +1,1 @@
-@java -jar puzzle.jar edtq.jpg 150x65
+@start javaw -jar puzzle.jar edtq.jpg 150x65
