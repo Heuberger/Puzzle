@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * @version 2.1, 2021-04-07
@@ -30,11 +31,24 @@ public class FileChooser extends JFileChooser {
         setMultiSelectionEnabled(false);
     }
 
+    public FileChooser addFileFilter(FileFilter filter) {
+        addChoosableFileFilter(filter);
+        setAcceptAllFileFilterUsed(true);
+        return this;
+    }
+    
     public File getFileToSave(Component parent) {
+        return getFileToSave(parent, null);
+    }
+    
+    public File getFileToSave(Component parent, String defaultExtension) {
         if (showSaveDialog(getParent()) != APPROVE_OPTION) {
             return null;
         }
         File file = getSelectedFile();
+        if (defaultExtension != null && file.getName().indexOf('.') == -1) {
+            file = new File(file.getParentFile(), file.getName() + "." + defaultExtension);
+        }
         Object[] msg = { "File already exists!", file.getAbsolutePath(), "Overwrite?" };
         if (file.exists() && showConfirmDialog(getParent(), msg, "Confirm", OK_CANCEL_OPTION) != OK_OPTION)
             return null;
@@ -49,10 +63,18 @@ public class FileChooser extends JFileChooser {
     }
     
     public File getFileToLoad(Component parent) {
+        return getFileToLoad(parent, null);
+    }
+    
+    public File getFileToLoad(Component parent, String defaultExtension) {
         if (showOpenDialog(parent) != APPROVE_OPTION) {
             return null;
         }
-        return getSelectedFile();
+        File file = getSelectedFile();
+        if (defaultExtension != null && file.getName().indexOf('.') == -1) {
+            file = new File(file.getParentFile(), file.getName() + "." + defaultExtension);
+        }
+        return file;
     }
 
     @Override

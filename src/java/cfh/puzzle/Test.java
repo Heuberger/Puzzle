@@ -41,6 +41,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import cfh.FileChooser;
 
 public class Test extends GamePanel {
@@ -312,7 +314,9 @@ public class Test extends GamePanel {
     }
     
     private void doSave(ActionEvent ev) {
-        File file = new FileChooser("puzzle").getFileToSave(getParent());
+        File file = new FileChooser("puzzle")
+            .addFileFilter(new FileNameExtensionFilter("Puzzle Files (*.jig)", "jig"))
+            .getFileToSave(getParent(), "jig");
         if (file != null) {
             try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file))) {
                 output.writeInt(MAGIC);
