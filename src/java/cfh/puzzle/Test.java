@@ -55,6 +55,8 @@ public class Test extends GamePanel {
     
     private static final int MAXX = 5000;
     private static final int MAXY = 4000;
+    
+    private static final FileNameExtensionFilter JIG_EXTENSION_FILTER = new FileNameExtensionFilter("Puzzle Files (*.jig)", "jig");
 
     private static final Color[] COLORS = new Color[] {
         Color.RED,
@@ -137,7 +139,9 @@ public class Test extends GamePanel {
                 }
             }
         } else {
-            File file = new FileChooser("puzzle").getFileToLoad(null);
+            File file = new FileChooser("puzzle")
+                .addFileFilter(JIG_EXTENSION_FILTER)
+                .getFileToLoad(null, JIG_EXTENSION_FILTER.getExtensions()[0]);
             if (file != null) {
                 imageName = file.getAbsolutePath();
                 try {
@@ -315,8 +319,8 @@ public class Test extends GamePanel {
     
     private void doSave(ActionEvent ev) {
         File file = new FileChooser("puzzle")
-            .addFileFilter(new FileNameExtensionFilter("Puzzle Files (*.jig)", "jig"))
-            .getFileToSave(getParent(), "jig");
+            .addFileFilter(JIG_EXTENSION_FILTER)
+            .getFileToSave(getParent(), JIG_EXTENSION_FILTER.getExtensions()[0]);
         if (file != null) {
             try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file))) {
                 output.writeInt(MAGIC);
