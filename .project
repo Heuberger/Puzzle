@@ -18,7 +18,7 @@
 		<link>
 			<name>src/jnlp/JNLP-INF/APPLICATION.JNLP</name>
 			<type>1</type>
-			<location>C:/CFH/eclipse/Puzzle/src/puzzle.jnlp</location>
+			<locationURI>PROJECT_LOC/src/puzzle.jnlp</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
