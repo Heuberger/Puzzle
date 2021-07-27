@@ -73,6 +73,7 @@ public class Test extends GamePanel {
         String imageName;
         BufferedImage image = null;
         int index = 0;
+        String open = null;
 
         while (index < args.length && args[index].startsWith("-")) {
             String opt = args[index++].substring(1);
@@ -82,23 +83,34 @@ public class Test extends GamePanel {
             }
             
             if ("help".startsWith(opt)) {
-                System.out.println(
-                        "java -jar puzzle.jar [<image> [<count>x<template> [<seed> [<type>]]\n"
+                System.out.println(""
+                        + "java -jar puzzle.jar [<image> [<count>x<template> [<seed> [<type>]]\n"
+                        + "java -jar puzzle.jar -open <JIG-file>\n"
                         + "    <image>     image name (from resource) or path, none = no image\n"
                         + "    <type>      11 = normal, 21 = debug, others for testing\n"
                         + "    <seed>      random = random seed, else the seed number\n"
                         + "    <count>     piece number\n"
-                        + "    <template>  50, 55, 60, 65, 85 = piece template"
+                        + "    <template>  50, 55, 60, 65, 85 = piece template\n"
+                        + "    <JIG-file>  Jigsaw file to open"
                         );
                 return;
+            } else if ("open".startsWith(opt)) {
+                if (index < args.length) {
+                    open = args[index++];
+                } else {
+                    errorMessage("missing JIG-file to open");
+                    return;
+                }
             } else {
                 errorMessage("unrecognized option", args[index-1]);
                 return;
             }
         }
         
-        
-        if (index < args.length && args[index].length() > 0) {
+        if (open != null) {
+            startJigsaw(new File(open));
+            return;
+        } else if (index < args.length && args[index].length() > 0) {
             arg = args[index++];
             if (arg.equals("-") || arg.equals("none")) {
                 imageName = "none";
@@ -152,22 +164,7 @@ public class Test extends GamePanel {
                 	return;
                 }
                 if (image == null) {
-                    try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
-                        int magic = input.readInt();
-                        if (magic == MAGIC) {
-                            int type = input.readInt();
-                            long seed = input.readLong();
-                            Size size = Size.read(input);
-                            image = decodeImage(input);
-                            Test test = new Test(type, image, size, seed, file.getAbsolutePath());
-                            test.load(input);
-                        } else {
-                            errorMessage("unable to load image from", imageName);
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        errorMessage(ex, "reading from", file.getAbsolutePath());
-                    }
+                    startJigsaw(file);
                     return;
                 }
             } else {
@@ -254,6 +251,25 @@ public class Test extends GamePanel {
 		long seed = 8006678197202707420L ^ System.nanoTime();
 		seed %= 100000;
 		return seed;
+	}
+	
+	private static void startJigsaw(File file) {
+        try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
+            int magic = input.readInt();
+            if (magic == MAGIC) {
+                int type = input.readInt();
+                long seed = input.readLong();
+                Size size = Size.read(input);
+                BufferedImage image = decodeImage(input);
+                Test test = new Test(type, image, size, seed, file.getAbsolutePath());
+                test.load(input);
+            } else {
+                errorMessage("unable to load ", file.getAbsolutePath());
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            errorMessage(ex, "reading from", file.getAbsolutePath());
+        }
 	}
 
 
