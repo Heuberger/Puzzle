@@ -71,7 +71,7 @@ public class FileChooser extends JFileChooser {
             return null;
         }
         File file = getSelectedFile();
-        if (defaultExtension != null && file.getName().indexOf('.') == -1) {
+        if (defaultExtension != null && file.getName().indexOf('.') == -1 && !file.exists()) {
             file = new File(file.getParentFile(), file.getName() + "." + defaultExtension);
         }
         return file;

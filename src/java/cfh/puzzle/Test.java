@@ -148,7 +148,7 @@ public class Test extends GamePanel {
                 	image = ImageIO.read(file);
                 } catch (IOException ex) {
                 	ex.printStackTrace();
-                	errorMessage(ex, args[index], file);
+                	errorMessage(ex, file);
                 	return;
                 }
                 if (image == null) {
