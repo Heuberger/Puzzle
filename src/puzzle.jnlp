@@ -13,7 +13,7 @@
         <icon href="icon.png"/>
         <icon kind="splash" href="splash.png"/>
         <offline-allowed/>
-        <association extensions="jig"/> 
+        <association mime-type="application-x/jigsaw-file" extensions="jig"/> 
         <shortcut online="true" install="true">
           <desktop/>
           <menu/>
