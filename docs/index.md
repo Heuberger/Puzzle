@@ -28,7 +28,7 @@ Java security needs the installation of 2 certificates to validate the download:
 
 ### 2. Java (WIP)
 
-Download the [ZIP file](https://github.com/Heuberger/Puzzle/releases/download/v0.09/Puzzle-0.09.zip) and extract its content. Start any of the included batch file (e.g. `bus.bat`) or just start (double-click) `puzzle.jar` (command line `java -jar puzzle.jar`).
+Download the [ZIP file](https://github.com/Heuberger/Puzzle/releases/download/v0.10/Puzzle-0.10.zip) and extract its content. Start any of the included batch file (e.g. `bus.bat`) or just start (double-click) `puzzle.jar` (command line `java -jar puzzle.jar`).
 
 
 
