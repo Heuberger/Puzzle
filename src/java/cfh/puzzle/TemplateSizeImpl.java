@@ -8,17 +8,19 @@ public class TemplateSizeImpl extends Size {
 
     private final int count;
     private final Template template;
+    private final String key;
 
-    protected static TemplateSizeImpl read0(ObjectInputStream input) throws IOException {
+    protected static TemplateSizeImpl read0(ObjectInputStream input, String key) throws IOException {
         int count = input.readInt();
         Template template = Template.read(input);
-        return new TemplateSizeImpl(count, template);
+        return new TemplateSizeImpl(count, template, key);
     }
     
     
-    TemplateSizeImpl(int count, Template template) {
+    TemplateSizeImpl(int count, Template template, String key) {
         this.count = count;
         this.template = template;
+        this.key = key;
     }
 
     @Override
@@ -90,6 +92,11 @@ public class TemplateSizeImpl extends Size {
     @Override
     public int getEdgeColorChange() {
         return template.getEdgeColorChange();
+    }
+    
+    @Override
+    public String getKey() {
+        return key;
     }
     
     @Override

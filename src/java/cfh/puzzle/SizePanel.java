@@ -1,5 +1,7 @@
 package cfh.puzzle;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.prefs.Preferences;
 
 import javax.swing.GroupLayout;
@@ -22,6 +24,7 @@ public class SizePanel {
     private JTextField message;
     private JTextField countField;
     private JComboBox<String> templateBox;
+    private String key = null;
     
     public SizePanel() {
         initGUI();
@@ -30,6 +33,12 @@ public class SizePanel {
     private void initGUI() {
         message = new JTextField();
         message.setEditable(false);
+        message.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                doMessageClicked(e);
+            }
+        });
         
         countField = new JTextField(10);
         countField.setText(prefs.get(PREF_COUNT, "200"));
@@ -79,6 +88,12 @@ public class SizePanel {
         layout.setVerticalGroup(vg);
     }
     
+    private void doMessageClicked(MouseEvent ev) {
+        if (ev.getClickCount() == 2 && ev.getButton() == ev.BUTTON1 && ev.getModifiersEx() == ev.CTRL_DOWN_MASK) {
+            key = JOptionPane.showInputDialog(panel, "Key?", key);
+        }
+    }
+    
     public Size showAndGetSize() {
         while (true) {
             int opt = JOptionPane.showConfirmDialog(null, panel, "Size", JOptionPane.OK_CANCEL_OPTION);
@@ -101,7 +116,7 @@ public class SizePanel {
             message.setText(null);
             prefs.put(PREF_COUNT, Integer.toString(count));
             prefs.put(PREF_TEMPLATE, templName);
-            return new TemplateSizeImpl(count, templ);
+            return new TemplateSizeImpl(count, templ, key);
         }
     }
 }

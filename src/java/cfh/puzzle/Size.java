@@ -9,10 +9,10 @@ public abstract class Size {
     private transient int width;
     private transient int height;
     
-    public static Size read(ObjectInputStream input) throws IOException {
+    public static Size read(ObjectInputStream input, String key) throws IOException {
         String name = input.readUTF();
         switch (name) {
-            case "TemplateSizeImpl": return TemplateSizeImpl.read0(input);
+            case "TemplateSizeImpl": return TemplateSizeImpl.read0(input, key);
             default: throw new IOException("unhandled Size type: " + name);
         }
     }
@@ -44,6 +44,8 @@ public abstract class Size {
     public abstract int getPegHeightDelta();
     
     public abstract int getEdgeColorChange();
+    
+    public abstract String getKey();
     
     protected abstract void write0(ObjectOutputStream out) throws IOException;
     

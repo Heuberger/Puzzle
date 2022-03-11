@@ -3,6 +3,7 @@ package cfh.puzzle;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+@Deprecated
 public class ConstSizeImpl extends Size {
 
     private final int count;
@@ -19,6 +20,7 @@ public class ConstSizeImpl extends Size {
     private final int pegHeightDelta;
     private final int edgeColorChange;
 
+    @Deprecated
     ConstSizeImpl(
         int count,
         int sizeX,
@@ -117,5 +119,10 @@ public class ConstSizeImpl extends Size {
     @Override
     public int getEdgeColorChange() {
         return edgeColorChange;
+    }
+    
+    @Override
+    public String getKey() {
+        return null;
     }
 }

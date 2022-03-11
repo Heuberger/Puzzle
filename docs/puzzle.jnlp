@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp 
-        spec="1.0+"
+    spec="1.0+"
 	codebase="https://heuberger.github.io/Puzzle/"
 	href="puzzle.jnlp"
-	version="0.09">
+	version="0.10">
     <information>
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>

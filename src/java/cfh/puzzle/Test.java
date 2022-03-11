@@ -31,15 +31,22 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESedeKeySpec;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -57,6 +64,7 @@ public class Test extends GamePanel {
     private static final int MAXY = 4000;
     
     private static final FileNameExtensionFilter JIG_EXTENSION_FILTER = new FileNameExtensionFilter("Puzzle Files (*.jig)", "jig");
+    private static final FileNameExtensionFilter IMG_EXTENSION_FILTER = new FileNameExtensionFilter("Images (*.jpg,*.png,*.gif,...)", ImageIO.getReaderFileSuffixes());
 
     private static final Color[] COLORS = new Color[] {
         Color.RED,
@@ -67,6 +75,8 @@ public class Test extends GamePanel {
         Color.GRAY,
         Color.CYAN,
         Color.ORANGE};
+    
+    private static final String ALGORITHM = "DESede";
 
     public static void main(String[] args) {
         String arg;
@@ -87,10 +97,10 @@ public class Test extends GamePanel {
                         + "java -jar puzzle.jar [<image> [<count>x<template> [<seed> [<type>]]\n"
                         + "java -jar puzzle.jar -open <JIG-file>\n"
                         + "    <image>     image name (from resource) or path, none = no image\n"
-                        + "    <type>      11 = normal, 21 = debug, others for testing\n"
-                        + "    <seed>      random = random seed, else the seed number\n"
                         + "    <count>     piece number\n"
                         + "    <template>  50, 55, 60, 65, 85 = piece template\n"
+                        + "    <seed>      random = random seed, else the seed number\n"
+                        + "    <type>      11 = normal, 21 = debug, others for testing\n"
                         + "    <JIG-file>  Jigsaw file to open"
                         );
                 return;
@@ -153,6 +163,7 @@ public class Test extends GamePanel {
         } else {
             File file = new FileChooser("puzzle")
                 .addFileFilter(JIG_EXTENSION_FILTER)
+                .addFileFilter(IMG_EXTENSION_FILTER)
                 .getFileToLoad(null, JIG_EXTENSION_FILTER.getExtensions()[0]);
             if (file != null) {
                 imageName = file.getAbsolutePath();
@@ -191,7 +202,7 @@ public class Test extends GamePanel {
             }
             templName = arg.substring(i+1);
             Template templ = Template.get(templName);
-            size = new TemplateSizeImpl(count, templ);
+            size = new TemplateSizeImpl(count, templ, null);   // TODO 
         } else {
             size = null;
         }
@@ -256,13 +267,19 @@ public class Test extends GamePanel {
 	private static void startJigsaw(File file) {
         try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
             int magic = input.readInt();
-            if (magic == MAGIC) {
+            String key;
+            if (magic == MAGIC2) {
+                key = JOptionPane.showInputDialog("Key?");
+            } else {
+                key =null;
+            }
+            if (magic == MAGIC || magic == MAGIC2) {
                 int type = input.readInt();
                 long seed = input.readLong();
-                Size size = Size.read(input);
-                BufferedImage image = decodeImage(input);
+                Size size = Size.read(input, key);
+                BufferedImage image = decodeImage(input, key, seed);
                 Test test = new Test(type, image, size, seed, file.getAbsolutePath());
-                test.load(input);
+                test.load(input, key);
             } else {
                 errorMessage("unable to load ", file.getAbsolutePath());
             }
@@ -274,6 +291,7 @@ public class Test extends GamePanel {
 
 
     private static final int MAGIC = 0x55F0_0105;
+    private static final int MAGIC2 = 0x55F0_0106;
 	
     private final Size puzzleSize;
     private final int type;
@@ -339,12 +357,12 @@ public class Test extends GamePanel {
             .getFileToSave(getParent(), JIG_EXTENSION_FILTER.getExtensions()[0]);
         if (file != null) {
             try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file))) {
-                output.writeInt(MAGIC);
+                output.writeInt(puzzleSize.getKey()==null ? MAGIC : MAGIC2);
                 output.writeInt(type);
                 output.writeLong(seed);
                 puzzleSize.write(output);
-                encodeImage(image, output);
-                save(output);
+                encodeImage(image, output, puzzleSize.getKey(), seed);
+                save(output, puzzleSize);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 error(ex.getClass().getSimpleName(), "Exception saving to", file.getAbsolutePath());
@@ -352,8 +370,8 @@ public class Test extends GamePanel {
         }
     }
 
-    private void save(ObjectOutputStream output) throws IOException {
-        encodeImage(getBackgroundImage(), output);
+    private void save(ObjectOutputStream output, Size size) throws IOException {
+        encodeImage(getBackgroundImage(), output, size.getKey(), seed);
         output.writeObject(getBackground());
         output.writeObject(getBookmarks());
         
@@ -372,8 +390,8 @@ public class Test extends GamePanel {
         }
     }
     
-    private void load(ObjectInputStream input) throws IOException {
-        setBackgroundImage(decodeImage(input));
+    private void load(ObjectInputStream input, String key) throws IOException {
+        setBackgroundImage(decodeImage(input, key, seed));
         Map<?, ?> marks;
         try {
             setBackground((Color) input.readObject());
@@ -999,7 +1017,7 @@ public class Test extends GamePanel {
         return null;
     }
     
-    private static void encodeImage(BufferedImage image, ObjectOutputStream output) throws IOException {
+    private static void encodeImage(BufferedImage image, ObjectOutputStream output, String key, long seed) throws IOException {
         if (image == null) {
             output.writeInt(0);
         } else {
@@ -1008,19 +1026,51 @@ public class Test extends GamePanel {
                 ImageIO.write(image, "PNG", result);
                 data = result.toByteArray();
             }
+            if (key != null && !key.isEmpty()) {
+                try {
+                    DESedeKeySpec keySpec = new DESedeKeySpec(spec(key, seed));
+                    SecretKey secret = SecretKeyFactory.getInstance(ALGORITHM).generateSecret(keySpec);
+                    Cipher cipher = Cipher.getInstance(ALGORITHM);
+                    cipher.init(cipher.ENCRYPT_MODE, secret);
+                    data = cipher.doFinal(data);
+                } catch (Exception ex) {
+                    throw new IOException("Unable to encrypt", ex);
+                }
+            }
             output.writeInt(data.length);
             output.write(data);
         }
     }
     
-    private static BufferedImage decodeImage(ObjectInputStream input) throws IOException {
+    private static BufferedImage decodeImage(ObjectInputStream input, String key, long seed) throws IOException {
         int length = input.readInt();
         if (length == 0)
             return null;
         byte[] data = new byte[length];
         input.readFully(data);
+        if (key != null && !key.isEmpty()) {
+            try {
+                DESedeKeySpec keySpec = new DESedeKeySpec(spec(key, seed));
+                SecretKey secret = SecretKeyFactory.getInstance(ALGORITHM).generateSecret(keySpec);
+                Cipher cipher = Cipher.getInstance(ALGORITHM);
+                cipher.init(cipher.DECRYPT_MODE, secret);
+                data = cipher.doFinal(data);
+            } catch (Exception ex) {
+                throw new IOException("Unable to read", ex);
+            }
+        }
         try (ByteArrayInputStream stream = new ByteArrayInputStream(data)) {
             return ImageIO.read(stream);
         }
+    }
+    
+    private static byte[] spec(String key, long seed) {
+        StringBuilder builder = new StringBuilder(key);
+        long s = seed;
+        while (builder.length() < 24) {
+            builder.append(s);
+            s += s;
+        }
+        return builder.toString().getBytes(StandardCharsets.UTF_8);
     }
 }
