@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import static java.awt.event.MouseEvent.*;
@@ -19,6 +23,9 @@ import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public abstract class Piece extends JComponent
                             implements MouseListener, MouseMotionListener, MouseWheelListener {
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh;
 
 import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
@@ -13,6 +17,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 /**
+ * @author Carlos F. Heuberger
  * @version 2.1, 2021-04-07
  */
 public class FileChooser extends JFileChooser {

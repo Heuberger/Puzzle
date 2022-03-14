@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Jigsaw Puzzle 
+  by Carlos F. Heuberger
+  
+  Copyright: Carlos F. Heuberger. All rights reserved.
+-->
 <jnlp 
     spec="1.0+"
 	codebase="https://heuberger.github.io/Puzzle/"
 	href="puzzle.jnlp"
-	version="0.10">
+	version="0.11">
     <information>
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>

@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import java.awt.event.MouseAdapter;
@@ -13,6 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class SizePanel {
 
     private static final String PREF_COUNT = "sizeCount";

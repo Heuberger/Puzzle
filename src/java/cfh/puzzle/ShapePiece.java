@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import java.awt.Color;
@@ -7,6 +11,9 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class ShapePiece extends Piece {
 
     private final Shape shape;

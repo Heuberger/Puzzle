@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import java.awt.AlphaComposite;
@@ -8,6 +12,9 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class MaskPieceDebug extends MaskPiece {
 
     private Rectangle base;

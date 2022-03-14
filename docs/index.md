@@ -2,7 +2,18 @@
 
 ![splash](splash.png)
 
-*use at your own risk - no warranties!*  v0.10
+A Jigsaw Puzzle
+by Carlos F. Heuberger
+
+*Use at your own risk - no warranties!* For my family and myself.
+
+Copyright: Carlos F. Heuberger. All rights reserved.
+
+
+
+You are allowed to play the game as described in the next Section under "Running".
+
+Other then that, you are not allowed to use, change and/or redistribute any User-Generated Content, except as described in Github Terms of Service (Section D.5).
 
 
 
@@ -28,7 +39,7 @@ Java security needs the installation of 2 certificates to validate the download:
 
 ### 2. Java (WIP)
 
-Download the [ZIP file](https://github.com/Heuberger/Puzzle/releases/download/v0.10/Puzzle-0.10.zip) and extract its content. Start any of the included batch file (e.g. `bus.bat`) or just start (double-click) `puzzle.jar` (command line `java -jar puzzle.jar`).
+Download the [ZIP file](https://github.com/Heuberger/Puzzle/releases/download/v0.11/Puzzle-0.11.zip) and extract its content. Start any of the included batch file (e.g. `bus.bat`) or just start (double-click) `puzzle.jar` (command line `java -jar puzzle.jar`).
 
 
 

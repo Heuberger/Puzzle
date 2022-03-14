@@ -1,8 +1,16 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+/**
+ * @author Carlos F. Heuberger
+ * @deprecated Testing only
+ */
 @Deprecated
 public class ConstSizeImpl extends Size {
 

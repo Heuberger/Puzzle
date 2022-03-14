@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import java.awt.Toolkit;
@@ -16,6 +20,9 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class Sound {
 
     private final Executor executor;

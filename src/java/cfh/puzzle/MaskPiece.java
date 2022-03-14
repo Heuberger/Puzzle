@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import java.awt.Color;
@@ -8,6 +12,9 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class MaskPiece extends Piece {
 
     private static final ColorModel DEF_COL_MOD = ColorModel.getRGBdefault();

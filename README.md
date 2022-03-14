@@ -2,11 +2,23 @@
 
 ![splash](src/pics/splash.png)
 
-My jigsaw puzzle
+A Jigsaw Puzzle 
+by Carlos F. Heuberger
 
-Work in progress.
+*Use at your own risk - no warranties!* For my family and myself.
 
-*use at your own risk - no warranties!*
+Copyright: Carlos F. Heuberger. All rights reserved.
+
+
+
+Please note that **no** User-Generated Content in this repository is licensed!   You can execute the following files from the `Puzzle/dist/` folder, to play the game:
+
+- `puzzle.jar` (using a Java Virtual Machine); or
+- `*.bat` files (to start the game).
+
+Other then that, you are not allowed to use, change and/or redistribute any User-Generated Content, except as described in Github Terms of Service (Section D.5). Particularly, you are not allowed to use or distribute any source code or any resource posted in this repository.
+
+
 
 ## Instructions
 

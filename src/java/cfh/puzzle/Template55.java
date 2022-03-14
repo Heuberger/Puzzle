@@ -1,5 +1,12 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class Template55 extends Template {
 
     @Override public int getSizeX() { return 55; }

@@ -1,3 +1,8 @@
+# Jigsaw Puzzle 
+# by Carlos F. Heuberger
+#
+# Copyright: Carlos F. Heuberger. All rights reserved.
+
 if [ "$PASS_S" = "" ]
 then
     echo Please set PASS_S

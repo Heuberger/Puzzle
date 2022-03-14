@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import static javax.swing.JOptionPane.*;
@@ -52,6 +56,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import cfh.FileChooser;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class Test extends GamePanel {
 
     private static final String VERSION;

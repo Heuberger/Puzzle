@@ -1,3 +1,7 @@
+/*
+ * Jigsaw Puzzle - Copyright: Carlos F. Heuberger. All rights reserved.
+ */
+
 package cfh.puzzle;
 
 import static java.util.Collections.*;
@@ -43,6 +47,9 @@ import javax.swing.SwingUtilities;
 
 import cfh.FileChooser;
 
+/**
+ * @author Carlos F. Heuberger
+ */
 public class GamePanel extends JPanel implements GameListener {
 
     static final int DELTA_SNAP = 8;
