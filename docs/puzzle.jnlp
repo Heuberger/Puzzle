@@ -9,7 +9,7 @@
     spec="1.0+"
 	codebase="https://heuberger.github.io/Puzzle/"
 	href="puzzle.jnlp"
-	version="0.11">
+	version="0.12">
     <information>
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>
@@ -41,6 +41,6 @@
  
     <application-desc
          name="Jigsaw Puzzle"
-         main-class="cfh.puzzle.Test">
+         main-class="cfh.puzzle.Main">
      </application-desc>
 </jnlp>

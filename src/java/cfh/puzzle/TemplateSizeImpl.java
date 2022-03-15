@@ -15,16 +15,16 @@ public class TemplateSizeImpl extends Size {
 
     private final int count;
     private final Template template;
-    private final String key;
+    private final char[] key;
 
-    protected static TemplateSizeImpl read0(ObjectInputStream input, String key) throws IOException {
+    protected static TemplateSizeImpl read0(ObjectInputStream input, char[] key) throws IOException {
         int count = input.readInt();
         Template template = Template.read(input);
         return new TemplateSizeImpl(count, template, key);
     }
     
     
-    TemplateSizeImpl(int count, Template template, String key) {
+    TemplateSizeImpl(int count, Template template, char[] key) {
         this.count = count;
         this.template = template;
         this.key = key;
@@ -102,7 +102,7 @@ public class TemplateSizeImpl extends Size {
     }
     
     @Override
-    public String getKey() {
+    public char[] getKey() {
         return key;
     }
     

@@ -51,6 +51,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -59,11 +60,11 @@ import cfh.FileChooser;
 /**
  * @author Carlos F. Heuberger
  */
-public class Test extends GamePanel {
+public class Main extends GamePanel {
 
     private static final String VERSION;
     static {
-        String version = Test.class.getPackage().getImplementationVersion();
+        String version = Main.class.getPackage().getImplementationVersion();
         VERSION = "Puzzle by Carlos F. Heuberger - v" + (version==null ? "?" : version);
     }
     
@@ -142,9 +143,9 @@ public class Test extends GamePanel {
                         return;
                     }
                 } else {
-                    url = Test.class.getResource(arg);
+                    url = Main.class.getResource(arg);
                     if (url == null && arg.charAt(0) != '/') {
-                        url = Test.class.getResource("resources/" + arg);
+                        url = Main.class.getResource("resources/" + arg);
                     }
                 }
                 if (url == null) {
@@ -257,7 +258,7 @@ public class Test extends GamePanel {
         System.out.printf("Size: %s%n", size);
         
         if (size != null) {
-            new Test(type, image, size, seed, imageName);
+            new Main(type, image, size, seed, imageName);
         }
     }
     
@@ -274,9 +275,13 @@ public class Test extends GamePanel {
 	private static void startJigsaw(File file) {
         try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
             int magic = input.readInt();
-            String key;
+            char[] key;
             if (magic == MAGIC2) {
-                key = JOptionPane.showInputDialog("Key?");
+                JPasswordField field = new JPasswordField(16);
+                if (JOptionPane.showConfirmDialog(null, field, "Input", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) {
+                    return;
+                }
+                key = field.getPassword();
             } else {
                 key =null;
             }
@@ -285,7 +290,7 @@ public class Test extends GamePanel {
                 long seed = input.readLong();
                 Size size = Size.read(input, key);
                 BufferedImage image = decodeImage(input, key, seed);
-                Test test = new Test(type, image, size, seed, file.getAbsolutePath());
+                Main test = new Main(type, image, size, seed, file.getAbsolutePath());
                 test.load(input, key);
             } else {
                 errorMessage("unable to load ", file.getAbsolutePath());
@@ -309,7 +314,7 @@ public class Test extends GamePanel {
 
     private JFrame frame;
 
-    private Test(int type, BufferedImage image, Size size, long seed, String title) {
+    private Main(int type, BufferedImage image, Size size, long seed, String title) {
         super(title, size.getSizeX(), size.getSizeY());
 
         this.puzzleSize = size;
@@ -329,7 +334,7 @@ public class Test extends GamePanel {
         
         frame = new JFrame(String.format("%s - %s - %d (%dx%d)", VERSION, title, size.width()*size.height(), size.width(), size.height()));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        URL url = Test.class.getResource("resources/icon.png");
+        URL url = Main.class.getResource("resources/icon.png");
         if (url == null) {
             System.err.println("unable to load \"resources/icon.png\"");
         } else {
@@ -397,7 +402,7 @@ public class Test extends GamePanel {
         }
     }
     
-    private void load(ObjectInputStream input, String key) throws IOException {
+    private void load(ObjectInputStream input, char[] key) throws IOException {
         setBackgroundImage(decodeImage(input, key, seed));
         Map<?, ?> marks;
         try {
@@ -1024,7 +1029,7 @@ public class Test extends GamePanel {
         return null;
     }
     
-    private static void encodeImage(BufferedImage image, ObjectOutputStream output, String key, long seed) throws IOException {
+    private static void encodeImage(BufferedImage image, ObjectOutputStream output, char[] key, long seed) throws IOException {
         if (image == null) {
             output.writeInt(0);
         } else {
@@ -1033,7 +1038,7 @@ public class Test extends GamePanel {
                 ImageIO.write(image, "PNG", result);
                 data = result.toByteArray();
             }
-            if (key != null && !key.isEmpty()) {
+            if (key != null && key.length > 0) {
                 try {
                     DESedeKeySpec keySpec = new DESedeKeySpec(spec(key, seed));
                     SecretKey secret = SecretKeyFactory.getInstance(ALGORITHM).generateSecret(keySpec);
@@ -1049,13 +1054,13 @@ public class Test extends GamePanel {
         }
     }
     
-    private static BufferedImage decodeImage(ObjectInputStream input, String key, long seed) throws IOException {
+    private static BufferedImage decodeImage(ObjectInputStream input, char[] key, long seed) throws IOException {
         int length = input.readInt();
         if (length == 0)
             return null;
         byte[] data = new byte[length];
         input.readFully(data);
-        if (key != null && !key.isEmpty()) {
+        if (key != null && key.length > 0) {
             try {
                 DESedeKeySpec keySpec = new DESedeKeySpec(spec(key, seed));
                 SecretKey secret = SecretKeyFactory.getInstance(ALGORITHM).generateSecret(keySpec);
@@ -1071,8 +1076,8 @@ public class Test extends GamePanel {
         }
     }
     
-    private static byte[] spec(String key, long seed) {
-        StringBuilder builder = new StringBuilder(key);
+    private static byte[] spec(char[] key, long seed) {
+        StringBuilder builder = new StringBuilder(new String(key));
         long s = seed;
         while (builder.length() < 24) {
             builder.append(s);

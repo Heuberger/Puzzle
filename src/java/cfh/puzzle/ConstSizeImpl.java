@@ -130,7 +130,7 @@ public class ConstSizeImpl extends Size {
     }
     
     @Override
-    public String getKey() {
+    public char[] getKey() {
         return null;
     }
 }

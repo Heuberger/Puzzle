@@ -24,17 +24,23 @@ Other then that, you are not allowed to use, change and/or redistribute any User
 
 ### Version
 
-- append to JAR file in `docs/puzzle_V<version>.jar`
-- `dist/puzzle.jar` ?
-- adjust `jar` entry in `src/puzzle.jnlp`
-  copy to `docs/`
-- adjust `Implementation-Version` in `src/manifest.txt`
-- adjust in `docs/index.md`
+- update `Implementation-Version` in `src/manifest.txt`
+- update `version` from `jnlp` tag in `src/puzzle.jnlp`
+- create `JAR`
+- sign `JAR` using `. src/signjar.sh`
 
 ### Java Web Start
 
-- `puzzle.jnlp` is available in `src/`
-  copy to `docs/`
+- copy `src/puzzle.jnlp` to `docs/`
+- copy `dist/puzzle.jar` to `docs/`
+
+### ZIP
+
+- copy `dist/` folder to new folder `Puzzle-<version>`
+- zip `Puzzle-<version>` folder to `Puzzle-<version>.zip`
+- adjust `ZIP` link in `docs/index.md` - two times Version (tag and file)
+- `commmit` and `tag -s v<version> -m v<version>`
+- `push`, create release for that tag and attach the `ZIP`
 
 ### Pictures
 

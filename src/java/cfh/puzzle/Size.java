@@ -16,7 +16,7 @@ public abstract class Size {
     private transient int width;
     private transient int height;
     
-    public static Size read(ObjectInputStream input, String key) throws IOException {
+    public static Size read(ObjectInputStream input, char[] key) throws IOException {
         String name = input.readUTF();
         switch (name) {
             case "TemplateSizeImpl": return TemplateSizeImpl.read0(input, key);
@@ -52,7 +52,7 @@ public abstract class Size {
     
     public abstract int getEdgeColorChange();
     
-    public abstract String getKey();
+    public abstract char[] getKey();
     
     protected abstract void write0(ObjectOutputStream out) throws IOException;
     

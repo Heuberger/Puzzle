@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
@@ -31,7 +32,7 @@ public class SizePanel {
     private JTextField message;
     private JTextField countField;
     private JComboBox<String> templateBox;
-    private String key = null;
+    private char[] key = null;
     
     public SizePanel() {
         initGUI();
@@ -97,7 +98,9 @@ public class SizePanel {
     
     private void doMessageClicked(MouseEvent ev) {
         if (ev.getClickCount() == 2 && ev.getButton() == ev.BUTTON1 && ev.getModifiersEx() == ev.CTRL_DOWN_MASK) {
-            key = JOptionPane.showInputDialog(panel, "Key?", key);
+            JPasswordField field = new JPasswordField(16);
+            JOptionPane.showMessageDialog(panel, field, "Password?", JOptionPane.QUESTION_MESSAGE);
+            key = field.getPassword();
         }
     }
     
