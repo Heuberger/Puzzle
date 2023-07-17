@@ -32,8 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
@@ -43,6 +46,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import cfh.FileChooser;
@@ -159,21 +163,19 @@ public class GamePanel extends JPanel implements GameListener {
     }
 
     protected JPopupMenu createPopup() {
-        JMenuItem home = new JMenuItem("Home");
-        home.addActionListener(this::doHome);
+        Action homeAction = createAction("Home", this::doHome);
+        JMenuItem home = new JMenuItem(homeAction);
+        getInputMap().put(KeyStroke.getKeyStroke("HOME"), homeAction.getValue(Action.NAME));
+        getActionMap().put(homeAction.getValue(Action.NAME), homeAction);
         
-        JMenuItem arrange = new JMenuItem("Arrange");
-        arrange.addActionListener(this::doArrange);
+        JMenuItem arrange = new JMenuItem(createAction("Arrange", this::doArrange));
         
-        showMenuItem = new JMenuItem("Show");
-        showMenuItem.addActionListener(this::doShow);
+        showMenuItem = new JMenuItem(createAction("Show", this::doShow));
         showMenuItem.setEnabled(image != null);
         
-        JMenuItem bg = new JMenuItem("Background");
-        bg.addActionListener(this::doBackground);
+        JMenuItem bg = new JMenuItem(createAction("Background", this::doBackground));
         
-        JMenuItem debug = new JMenuItem("Debug");
-        debug.addActionListener(this::doDebug);
+        JMenuItem debug = new JMenuItem(createAction("Debug", this::doDebug));
         
         JPopupMenu menu = new JPopupMenu();
         menu.add(showMenuItem);
@@ -397,7 +399,6 @@ public class GamePanel extends JPanel implements GameListener {
                     double w = (double) image.getWidth() / (screen.width-20);
                     double h = (double) image.getHeight() / (screen.height-100);
                     double scale = Math.max(w, h);
-                    System.out.println(scale);
                     icon = new ImageIcon(image.getScaledInstance((int)(image.getWidth()/scale), (int)(image.getHeight()/scale), Image.SCALE_SMOOTH));
                 } else {
                     icon = new ImageIcon(image);
@@ -479,6 +480,16 @@ public class GamePanel extends JPanel implements GameListener {
     
     private static boolean isShift(ActionEvent ev) {
         return (ev.getModifiers() & ev.SHIFT_MASK) != 0;
+    }
+    
+    @SuppressWarnings("serial")
+    private static Action createAction(String name, Consumer<ActionEvent> function) {
+        return new AbstractAction(name) {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                function.accept(ev);
+            }
+        };
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////

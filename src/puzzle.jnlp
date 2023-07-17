@@ -9,7 +9,7 @@
     spec="1.0+"
 	codebase="https://heuberger.github.io/Puzzle/"
 	href="puzzle.jnlp"
-	version="0.12">
+	version="0.13">
     <information>
         <title>Jigsaw Puzzle</title>
         <vendor>Carlos F. Heuberger</vendor>

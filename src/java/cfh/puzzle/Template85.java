@@ -15,7 +15,7 @@ public class Template85 extends Template {
     @Override public int getOverlap() { return 35; }
     @Override public int getBaseVariation() { return 10; }
 
-    @Override public int getBorderWidth() { return 7; }
+    @Override public int getBorderWidth() { return 8; }
 
     @Override public int getPegWidth() { return 7; }
     @Override public int getPegLength() { return 5; }
