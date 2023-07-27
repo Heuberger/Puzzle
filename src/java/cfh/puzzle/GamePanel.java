@@ -260,57 +260,60 @@ public class GamePanel extends JPanel implements GameListener {
         int w = getWidth();
         int h = getHeight();
         
-        Graphics2D gg = (Graphics2D) g;
-        
-        if (background != null) {
-            for (int x = 0; x < w; x += background.getWidth(this)) {
-                for (int y = 0; y < h; y += background.getHeight(this)) {
-                    gg.drawImage(background, x, y, this);
+        Graphics2D gg = (Graphics2D) g.create();
+        try {
+            if (background != null) {
+                for (int x = 0; x < w; x += background.getWidth(this)) {
+                    for (int y = 0; y < h; y += background.getHeight(this)) {
+                        gg.drawImage(background, x, y, this);
+                    }
                 }
+            } else {
+                gg.setColor(getBackground());
+                gg.fillRect(0, 0, getWidth(), getHeight());
             }
-        } else {
-            gg.setColor(getBackground());
-            gg.fillRect(0, 0, getWidth(), getHeight());
-        }
 
-        gg.setColor(Color.LIGHT_GRAY);
-        for (int x = 0; x < w; x += sizeX) {
-            gg.drawLine(x, 0, x, h);
-        }
-        for (int y = 0; y < h; y += sizeY) {
-            gg.drawLine(0, y, w, y);
-        }
+            gg.setColor(Color.LIGHT_GRAY);
+            for (int x = 0; x < w; x += sizeX) {
+                gg.drawLine(x, 0, x, h);
+            }
+            for (int y = 0; y < h; y += sizeY) {
+                gg.drawLine(0, y, w, y);
+            }
 
-        gg.setColor(Color.BLUE);
-        for (int x = 0; x < w; x += 5*sizeX) {
-            gg.drawLine(x, 0, x, h);
-        }
-        for (int y = 0; y < h; y += 5*sizeY) {
-            gg.drawLine(0, y, w, y);
-        }
+            gg.setColor(Color.BLUE);
+            for (int x = 0; x < w; x += 5*sizeX) {
+                gg.drawLine(x, 0, x, h);
+            }
+            for (int y = 0; y < h; y += 5*sizeY) {
+                gg.drawLine(0, y, w, y);
+            }
 
-        gg.setColor(Color.BLACK);
-        for (int x = 0; x < w; x += 10*sizeX) {
-            gg.drawLine(x, 0, x, h);
-        }
-        for (int y = 0; y < h; y += 10*sizeY) {
-            gg.drawLine(0, y, w, y);
-        }
+            gg.setColor(Color.BLACK);
+            for (int x = 0; x < w; x += 10*sizeX) {
+                gg.drawLine(x, 0, x, h);
+            }
+            for (int y = 0; y < h; y += 10*sizeY) {
+                gg.drawLine(0, y, w, y);
+            }
 
-        gg.fillRect(0, 0, 2, h);
-        gg.fillRect(0, 0, w, 2);
-        gg.fillRect(w-2, 0, 2, h);
-        gg.fillRect(0, h-2, w, 2);
+            gg.fillRect(0, 0, 2, h);
+            gg.fillRect(0, 0, w, 2);
+            gg.fillRect(w-2, 0, 2, h);
+            gg.fillRect(0, h-2, w, 2);
 
-        String info = String.format("%c: %4d selected", (char) actualGroup, pieces.stream().filter(Piece::isSelected).count());
-        gg.setFont(new Font("monospaced", Font.BOLD, 16));
-        FontMetrics fm = gg.getFontMetrics();
-        int tw = fm.stringWidth(info);
-        int th = fm.getHeight();
-        gg.setColor(new Color(0, 200, 0, 100));
-        gg.fillRect(-getX(), -getY(), 4+tw+4, th);
-        gg.setColor(new Color(0, 0, 0, 255));
-        gg.drawString(info, 4-getX(), fm.getAscent()+fm.getLeading()-getY());
+            String info = String.format("%c: %4d selected", (char) actualGroup, pieces.stream().filter(Piece::isSelected).count());
+            gg.setFont(new Font("monospaced", Font.BOLD, 16));
+            FontMetrics fm = gg.getFontMetrics();
+            int tw = fm.stringWidth(info);
+            int th = fm.getHeight();
+            gg.setColor(new Color(0, 200, 0, 100));
+            gg.fillRect(-getX(), -getY(), 4+tw+4, th);
+            gg.setColor(new Color(0, 0, 0, 255));
+            gg.drawString(info, 4-getX(), fm.getAscent()+fm.getLeading()-getY());
+        } finally {
+            gg.dispose();
+        }
     }
     
     private void doHome(ActionEvent ev) {
