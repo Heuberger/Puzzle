@@ -16,7 +16,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -64,8 +63,6 @@ public class GamePanel extends JPanel implements GameListener {
     private final int sizeY;
 
     private JMenuItem showMenuItem;
-    
-    private JDialog preview = null;
     
     private final List<Piece> pieces = new ArrayList<>();
     
@@ -390,30 +387,33 @@ public class GamePanel extends JPanel implements GameListener {
     
     protected void doShow(ActionEvent ev) {
         if (image != null) {
-            if (preview == null) {
-                Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-                ImageIcon icon;
-                if (image.getWidth() > screen.width-20 || image.getHeight() > screen.height-100) {
-                    double w = (double) image.getWidth() / (screen.width-20);
-                    double h = (double) image.getHeight() / (screen.height-100);
-                    double scale = Math.max(w, h);
-                    System.out.println(scale);
-                    icon = new ImageIcon(image.getScaledInstance((int)(image.getWidth()/scale), (int)(image.getHeight()/scale), Image.SCALE_SMOOTH));
-                } else {
-                    icon = new ImageIcon(image);
-                }
-                JLabel msg = new JLabel(icon);
-                preview = new JDialog(SwingUtilities.windowForComponent(this));
-                preview.setTitle("Preview - " + title);
-                preview.setModal(false);
-                preview.add(new JScrollPane(msg));
-                msg.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent ev) {
-                        preview.setVisible(false);
-                    }
-                });
+            Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+            double scale;
+            if (image.getWidth() > screen.width-20 || image.getHeight() > screen.height-100) {
+                double w = (double) image.getWidth() / (screen.width-20);
+                double h = (double) image.getHeight() / (screen.height-100);
+                scale = Math.max(w, h);
+            } else {
+                scale = 1.0;
             }
+            if (ev ==null || (ev.getModifiers() & ev.CTRL_MASK) == 0) {
+                scale *= 2;
+            }
+
+            ShowPanel panel = new ShowPanel(scale, image);
+            JDialog preview = new JDialog(SwingUtilities.windowForComponent(this));
+            preview.setTitle("Preview - " + title);
+            preview.setModal(false);
+            preview.add(new JScrollPane(panel));
+            panel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent ev) {
+                    if (ev.getButton() == ev.BUTTON1) {
+                        preview.setVisible(false);
+                        preview.dispose();
+                    }
+                }
+            });
             preview.pack();
             preview.setVisible(true);
         }
