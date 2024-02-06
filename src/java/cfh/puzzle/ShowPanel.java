@@ -33,6 +33,8 @@ public class ShowPanel extends JPanel {
         this.scale = scale;
         this.image = requireNonNull(image, "image");
         
+        // setToolTipText("<html>left-click to close<p/>right-click to show crosshair");
+        
         setPreferredSize(new Dimension((int)(image.getWidth(this)/scale), (int)(image.getHeight(this)/scale)));
         addMouseListener(new MouseAdapter() {
             @Override

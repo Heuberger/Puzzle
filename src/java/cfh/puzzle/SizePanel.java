@@ -129,7 +129,7 @@ public class SizePanel {
         
         SequentialGroup vg = layout.createSequentialGroup();
         vg.addComponent(imageName);
-        vg.addGap(8);
+        vg.addGap(16);
         vg.addComponent(message);
         vg.addGap(4);
         vg.addGroup(layout.createBaselineGroup(false, false)
@@ -139,7 +139,7 @@ public class SizePanel {
         vg.addGroup(layout.createBaselineGroup(false, false)
             .addComponent(templateLabel)
             .addComponent(templateBox));
-        vg.addGap(4);
+        vg.addGap(16);
         vg.addComponent(sizeField);
         layout.setVerticalGroup(vg);
         
@@ -152,6 +152,7 @@ public class SizePanel {
             Template templ = Template.get((String) templateBox.getSelectedItem());
             Dimension d = Main.dimension(image, count, templ.getBorderWidth());
             sizeField.setText(String.format("%d x %d = %d pieces", d.width, d.height, d.width*d.height));
+            sizeField.setToolTipText(String.format("%.2f x %.2f", (float)image.getWidth()/d.width, (float)image.getHeight()/d.height));
         } catch (IllegalArgumentException ex) {
             sizeField.setText("");
         }

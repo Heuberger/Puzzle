@@ -69,8 +69,8 @@ public class Main extends GamePanel {
         VERSION = "Puzzle by Carlos F. Heuberger - v" + (version==null ? "?" : version);
     }
     
-    private static final int MAXX = 9000;
-    private static final int MAXY = 5000;
+    private static final int MAXX = 12000;
+    private static final int MAXY = 8000;
     
     private static final FileNameExtensionFilter JIG_EXTENSION_FILTER = new FileNameExtensionFilter("Puzzle Files (*.jig)", "jig");
     private static final FileNameExtensionFilter IMG_EXTENSION_FILTER = new FileNameExtensionFilter("Images (*.jpg,*.png,*.gif,...)", ImageIO.getReaderFileSuffixes());
