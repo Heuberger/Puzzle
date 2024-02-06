@@ -108,6 +108,7 @@ public class TemplateSizeImpl extends Size {
     
     @Override
     public String toString() {
-        return count + "x" + template.getClass().getSimpleName();
+        String templ = template.getClass().getSimpleName();
+        return count + "/" + templ.substring(templ.length()-2);
     }
 }

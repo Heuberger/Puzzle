@@ -90,6 +90,7 @@ public class SizePanel {
         templateBox.addItem("55");
         templateBox.addItem("60");
         templateBox.addItem("65");
+        templateBox.addItem("75");
         templateBox.addItem("85");
         templateBox.setSelectedItem(prefs.get(PREF_TEMPLATE, "65"));
         templateBox.addActionListener(new ActionListener() {

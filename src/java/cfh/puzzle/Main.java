@@ -69,8 +69,8 @@ public class Main extends GamePanel {
         VERSION = "Puzzle by Carlos F. Heuberger - v" + (version==null ? "?" : version);
     }
     
-    private static final int MAXX = 5000;
-    private static final int MAXY = 4000;
+    private static final int MAXX = 9000;
+    private static final int MAXY = 5000;
     
     private static final FileNameExtensionFilter JIG_EXTENSION_FILTER = new FileNameExtensionFilter("Puzzle Files (*.jig)", "jig");
     private static final FileNameExtensionFilter IMG_EXTENSION_FILTER = new FileNameExtensionFilter("Images (*.jpg,*.png,*.gif,...)", ImageIO.getReaderFileSuffixes());
@@ -107,7 +107,7 @@ public class Main extends GamePanel {
                         + "java -jar puzzle.jar -open <JIG-file>\n"
                         + "    <image>     image name (from resource) or path, none = no image\n"
                         + "    <count>     piece number\n"
-                        + "    <template>  50, 55, 60, 65, 85 = piece template\n"
+                        + "    <template>  40, 50, 55, 60, 65, 75, 85 = piece template\n"
                         + "    <seed>      random = random seed, else the seed number\n"
                         + "    <type>      11 = normal, 21 = debug, others for testing\n"
                         + "    <JIG-file>  Jigsaw file to open"
@@ -333,7 +333,7 @@ public class Main extends GamePanel {
         setOpaque(false);
         setSize(MAXX, MAXY);
         
-        frame = new JFrame(String.format("%s - %s - %d (%dx%d)", VERSION, title, size.width()*size.height(), size.width(), size.height()));
+        frame = new JFrame(String.format("%s - %s - %s (%dx%d)", VERSION, title, size.toString(), size.width(), size.height()));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         URL url = Main.class.getResource("resources/icon.png");
         if (url == null) {
@@ -481,12 +481,8 @@ public class Main extends GamePanel {
                     gg.setComposite(AlphaComposite.Src);
                     Color base = new Color(200, 150, 100);
                     gg.setColor(base);
-                    gg.fill3DRect(0, 0, width, height, true);
-                    if (BORDER >= 3) {
-                        gg.fill3DRect(1, 1, width-2, height-2, true);
-                        if (BORDER >= 5) {
-                            gg.fill3DRect(2, 2, width-4, height-4, true);
-                        }
+                    for (int i = 0; i < BORDER; i += 2) {
+                        gg.fill3DRect(i/2, i/2, width-i, height-i, true);
                     }
                     gg.drawImage(image, BORDER, BORDER, null);
                     image = border;
