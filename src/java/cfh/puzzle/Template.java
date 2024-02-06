@@ -21,7 +21,7 @@ public abstract class Template {
 			case "60": return new Template60(); 
 			case "65": return new Template65(); 
 			case "85": return new Template85(); 
-			default: throw new RuntimeException("unknown template: " + name);
+			default: throw new IllegalArgumentException("unknown template: " + name);
 		}
 	}
 	

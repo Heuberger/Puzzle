@@ -8,6 +8,7 @@ import static javax.swing.JOptionPane.*;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -249,7 +250,7 @@ public class Main extends GamePanel {
         }
         
         if (size == null) {
-        	SizePanel sizePanel = new SizePanel();
+        	SizePanel sizePanel = new SizePanel(imageName, image);
 			size = sizePanel.showAndGetSize();
         }
         
@@ -461,27 +462,19 @@ public class Main extends GamePanel {
         final int BORDER = puzzleSize.getBorderWidth();
         final int OVER = puzzleSize.getOverlap();
 
-        final int X;
-        final int Y;
-        if (image == null) {
-            Y = (int) Math.sqrt(COUNT);
-            X = Math.round((float)COUNT / Y);
-        } else {
-            int width = image.getWidth() + BORDER + BORDER;
-            int height = image.getHeight() + BORDER + BORDER;
-            double area = (double)(width*height)/(COUNT);
-            double min = Math.sqrt(area);
-            X = (int) Math.round(width/min);
-            Y = (int) Math.round(height/min);
-            System.out.printf("Pieces: %dx%d=%d (%dx%d)%n", X, Y, X*Y, SX, SY);
+        Dimension d = dimension(image, COUNT, BORDER);
+        final int X = d.width;
+        final int Y = d.height;
+        System.out.printf("Pieces: %dx%d=%d (%dx%d)%n", X, Y, X*Y, SX, SY);
+        if (image != null) {
             AffineTransform scale = AffineTransform.getScaleInstance(
                 (double) (X*SX-BORDER-BORDER) / image.getWidth(),
                 (double) (Y*SY-BORDER-BORDER) / image.getHeight());
             AffineTransformOp op = new AffineTransformOp(scale, AffineTransformOp.TYPE_BICUBIC);
             image = op.filter(image, null);
             if (BORDER > 0) {
-                width = BORDER + image.getWidth() + BORDER;
-                height = BORDER + image.getHeight() + BORDER;
+                int width = BORDER + image.getWidth() + BORDER;
+                int height = BORDER + image.getHeight() + BORDER;
                 BufferedImage border = new BufferedImage(width, height, image.getType());
                 Graphics2D gg = border.createGraphics();
                 try {
@@ -1027,6 +1020,23 @@ public class Main extends GamePanel {
             error("Error", "Unable to load", filename);
         }
         return null;
+    }
+    
+    static Dimension dimension(BufferedImage image, int count, int border) {
+        int x;
+        int y;
+        if (image == null) {
+            y = (int) Math.sqrt(count);
+            x = Math.round((float)count / y);
+        } else {
+            int width = image.getWidth() + border + border;
+            int height = image.getHeight() + border + border;
+            double area = (double)(width*height)/(count);
+            double min = Math.sqrt(area);
+            x = (int) Math.round(width/min);
+            y = (int) Math.round(height/min);
+        }
+        return new Dimension(x, y);
     }
     
     private static void encodeImage(BufferedImage image, ObjectOutputStream output, char[] key, long seed) throws IOException {
