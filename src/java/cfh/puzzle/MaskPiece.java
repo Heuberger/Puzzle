@@ -4,13 +4,22 @@
 
 package cfh.puzzle;
 
+import static javax.swing.JOptionPane.getRootFrame;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 
 /**
  * @author Carlos F. Heuberger
@@ -27,6 +36,8 @@ public class MaskPiece extends Piece {
     
     private Image lastImage = null;
     private Direction lastDir = null;
+
+    private JWindow detail;
     
     public MaskPiece(int x, int y, Direction dir, 
                      BufferedImage msk, 
@@ -187,5 +198,43 @@ public class MaskPiece extends Piece {
         }
         return (tx >= 0) && (tx < mask.getWidth()) && (ty >= 0) && (ty < mask.getHeight()) &&
             (DEF_COL_MOD.getAlpha(mask.getRGB(tx, ty)) > 0);
+    }
+    
+    private static final int DETAIL_SCALE = 3;
+    
+    @Override
+    public void mousePressed(MouseEvent ev) {
+        if (SwingUtilities.isRightMouseButton(ev) && ev.isControlDown()) {
+            if (detail == null) {
+                detail = new JWindow(getRootFrame());
+                BufferedImage img = new BufferedImage(DETAIL_SCALE*getWidth(), DETAIL_SCALE*getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D gg = img.createGraphics();
+                try {
+                    Point p = getLocationOnScreen();
+                    gg.scale(DETAIL_SCALE, DETAIL_SCALE);
+                    gg.translate(p.getX() - ev.getXOnScreen() + img.getWidth()/6, p.getY() - ev.getYOnScreen() + img.getHeight()/6);
+                    paint(gg);
+                } finally {
+                    gg.dispose();
+                }
+                JLabel lbl = new JLabel(new ImageIcon(img));
+                detail.add(lbl);
+                detail.pack();
+                detail.setLocation(ev.getXOnScreen()-img.getWidth()/2, ev.getYOnScreen()-img.getHeight()/2);
+                detail.setVisible(true);
+            }
+        }
+        super.mousePressed(ev);
+    }
+    
+    @Override
+    public void mouseReleased(MouseEvent ev) {
+        if (SwingUtilities.isRightMouseButton(ev)) {
+            if (detail != null) {
+                detail.dispose();
+                detail = null;
+            }
+        }
+        super.mouseReleased(ev);
     }
 }

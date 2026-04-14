@@ -320,52 +320,50 @@ public class GamePanel extends JPanel implements GameListener {
     
     private void doArrange(ActionEvent ev) {
         boolean all = actualGroup == KEY_NO_GROUP && pieces.stream().noneMatch(Piece::isSelected);
-        if (isCtrl(ev)) {
-            int w = getParent().getWidth();
-            int h = getParent().getHeight();
-            int i = 0;
-            int j = 0;
-            int x0 = 15 - getX();
-            int y0 = 15 - getY();
-            synchronized (getTreeLock()) {
-                for (Piece piece : pieces) {
-                    if (!piece.getConnected().isEmpty())
-                        continue;
-                    if (!all && !piece.isSelected())
-                        continue;
-
-                    int x = x0 + i*(sizeX+20) + 5*(j%2);
-                    int y = y0 + j*(sizeY+20) + 5*(i%2);
-                    piece.setLocation(x, y);
-
-                    j += 1;
-                    if (y + sizeY + piece.getHeight() > h - getY()) {
-                        j = 0;
-                        i += 1;
-                        if (!isShift(ev) && (x + sizeX + piece.getWidth() > w - getX())) {
-                            x0 += 16;
-                            y0 += 16;
-                            i = 0;
-                        }
-                    }
-                }
-            }
-        } else {
+        boolean alternate = isAlt(ev);
+        synchronized (getTreeLock()) {
             int w = getParent().getWidth();
             int h = getParent().getHeight();
             int x = - getX();
             int y = - getY();
             int delta = 0;
-            synchronized (getTreeLock()) {
+            if (isCtrl(ev)) {
                 for (int i = 0; i < getComponentCount(); i++) {
                     Component comp = getComponent(i);
                     if (comp instanceof Piece) {
                         Piece piece = (Piece) comp;
                         if (!piece.getConnected().isEmpty())
                             continue;
-                        if (!all && !piece.isSelected())
+                        if (!all && (alternate == piece.isSelected()))
                             continue;
-      
+
+                        int pw = (piece.getWidth() + sizeX) / 2 + 2;
+                        int ph = (piece.getHeight() + sizeY) / 2 + 2; 
+                        if (y + ph > h - getY()) {
+                            y = - getY() + delta;
+                            x += pw;
+                            if (!isShift(ev) && (x + pw > w - getX())) {
+                                delta += 16;
+                                y += 16;
+                                x = - getX() + delta;
+                            }
+                        }
+                        piece.setLocation(x, y);
+                        y += ph;
+                    } else {
+                        continue;
+                    }
+                }
+            } else {
+                for (int i = 0; i < getComponentCount(); i++) {
+                    Component comp = getComponent(i);
+                    if (comp instanceof Piece) {
+                        Piece piece = (Piece) comp;
+                        if (!piece.getConnected().isEmpty())
+                            continue;
+                        if (!all && (alternate == piece.isSelected()))
+                            continue;
+
                         int pw = (piece.getWidth() + sizeX) / 2 + 2;
                         int ph = (piece.getHeight() + sizeY) / 2 + 2; 
                         if (x + pw > w - getX()) {
@@ -398,10 +396,12 @@ public class GamePanel extends JPanel implements GameListener {
             } else {
                 scale = 1.0;
             }
-            if (ev ==null || (ev.getModifiers() & ev.CTRL_MASK) == 0) {
+            if (ev == null || (ev.getModifiers() & ev.CTRL_MASK) == 0) {
                 scale *= 2;
+            } else if ((ev.getModifiers() & ev.SHIFT_MASK) != 0) {
+                scale = 1.0;
             }
-
+                
             ShowPanel panel = new ShowPanel(scale, image);
             JDialog preview = new JDialog(SwingUtilities.windowForComponent(this));
             preview.setTitle("Preview - " + title);
@@ -441,8 +441,8 @@ public class GamePanel extends JPanel implements GameListener {
                         setBackgroundImage(null);
                         break;
                     case "c":
-                    case "col":
                     case "color":
+                    case "colour":
                     case "solid":
                         Color color = JColorChooser.showDialog(getParent(), "Background", getBackground());
                         if (color != null) {
@@ -475,6 +475,10 @@ public class GamePanel extends JPanel implements GameListener {
         showMessageDialog(getParent(), msg, title, ERROR_MESSAGE);
     }
     
+    private static boolean isAlt(ActionEvent ev) {
+        return (ev.getModifiers() & ev.ALT_MASK) != 0;
+    }
+    
     private static boolean isCtrl(ActionEvent ev) {
         return (ev.getModifiers() & ev.CTRL_MASK) != 0;
     }
@@ -483,7 +487,7 @@ public class GamePanel extends JPanel implements GameListener {
         return (ev.getModifiers() & ev.SHIFT_MASK) != 0;
     }
     
-    @SuppressWarnings("serial")
+//    @SuppressWarnings("serial")
     private static Action createAction(String name, Consumer<ActionEvent> function) {
         return new AbstractAction(name) {
             @Override

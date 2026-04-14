@@ -19,7 +19,7 @@ public class Template75 extends Template {
 
     @Override public int getPegWidth() { return 6; }
     @Override public int getPegLength() { return 3; }
-    @Override public int getPegRadius() { return 9; }
+    @Override public int getPegRadius() { return 9; } // 8
     
     @Override public int getPegPositionDelta() { return 5; }
     @Override public int getPegRadiusDelta() { return 3; }

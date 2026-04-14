@@ -63,16 +63,18 @@ open a previously saved puzzle to continue playing.
   If a piece is dropped near the correct neighbour(s), the pieces will snap together.
 * Hold the `CTRL` Key and click on a connected piece to disconnect it.
 * Use the scroll wheel or double-click (`LEFT` or `RIGHT` button) to rotate the piece(s) under the cursor.
+* Hold the `CTRL` Key and the `RIGHT` mouse button on a piece to enlarge it (while holding).
 
 #### General
 
 * `RIGHT` click background to open menu.
 * Use `LEFT` button on background to drag the whole surface.
 * `CTRL`-digit or `CTRL`-letter to save current surface position under that key. 
-  The corresponding digit or letter, without `CTRL`, to move to the corresponding saved position.
-* `BACKSPACE` to move back to last position.
+  The corresponding digit or letter, without `CTRL`, to scroll to the corresponding saved position.
+* `BACKSPACE` to scroll back to last surface position.
+* Select `Home` in the menu to scroll to the inital surface position.
 
-#### Marking
+#### Marking Pieces
 
 Marked (selected) pieces can be rearranged by selecting the `Arrange` menu point. If no pieces are marked and no selection group is active, all pieces will be rearranged. Connected pieces are never rearranged. The pieces will be arranged horizontally starting at the current location, or vertically if the `CTRL` key is pressed when the menu is selected.
 
@@ -84,9 +86,32 @@ Marked (selected) pieces can be rearranged by selecting the `Arrange` menu point
 Pieces can be grouped together in Selection Groups named by a digit or letter. Activating such group will mark the pieces of that group. While the group is active, marking/unmarking a piece will add/remove that piece from that group.
 
 - `SHIFT`-digit or `SHIFT`-letter to activate Selection Group.
-- `SHIFT`-`SPACE` to deactivate any group and unmark all pieces.
-- `CTRL`-`SHIFT`-digit or `CTRL`-`SHIFT`-letter to save the actually marked pieces to a Selection Group.
+- `SHIFT-SPACE` to deactivate any group and unmark all pieces.
+- `CTRL-SHIFT`-digit or `CTRL-SHIFT`-letter to save the actually marked pieces to a Selection Group.
 
-#### Background
+### Menu
 
-A background image can be loaded selecting the `Background` menu option. A color can be chosen instead of an image by entering `color` as file name.
+- `Show`
+  show the final image; scaled down unless `CTRL` (double) or `CTRL-SHIFT` (original size) are pressed
+
+- `Background`
+  A background image can be loaded selecting the `Background` menu option. 
+  A color can be chosen instead of an image by entering `color` (or just `c`) as file name.
+  To reset the background to empty, enter `empty` or `none` as file name.
+  
+- `Home`
+  Scroll back to initial position = top left corner.
+
+- `Arrange`
+  The selected pieces are lay out filling the displayed screen starting on the left top corner, starting over if the screen is filled. If no piece is selected and no group is chosen, all pieces are arranged.
+  Only **unconnected** pieces are affected. 
+  Default: row wise - left to right and then down
+  `CTRL`: column wise - top to bottom and then to the right
+  Use `SHIFT` to avoid overlapping, that is, filling will continue outside the displayed surface.
+  Use `ALT` to arrange unselected pieces.
+  
+- `Debug`
+  Print the name of connected pieces on standard output.
+  
+- `Save`
+  Save the current puzzle. Surface position aliases are saved; selection groups are **not saved**!

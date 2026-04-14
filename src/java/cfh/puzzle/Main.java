@@ -289,7 +289,10 @@ public class Main extends GamePanel {
             if (magic == MAGIC || magic == MAGIC2) {
                 int type = input.readInt();
                 long seed = input.readLong();
+                System.out.printf("Seed: %d%n", seed);
+                System.out.printf("Puzzle: %s%n", file.toURI());
                 Size size = Size.read(input, key);
+                System.out.printf("Size: %s%n", size);
                 BufferedImage image = decodeImage(input, key, seed);
                 Main test = new Main(type, image, size, seed, file.getAbsolutePath());
                 test.load(input, key);
@@ -451,7 +454,7 @@ public class Main extends GamePanel {
         return popup;
     }
     
-    private List<Piece> createPieces(BufferedImage image) {
+    private List<Piece> createPieces(BufferedImage img) {
         List<Piece> result = new ArrayList<Piece>();
         BufferedImage mask1 = loadImage("resources/mask1.png");
         BufferedImage mask2 = loadImage("resources/mask75.png");
@@ -462,20 +465,20 @@ public class Main extends GamePanel {
         final int BORDER = puzzleSize.getBorderWidth();
         final int OVER = puzzleSize.getOverlap();
 
-        Dimension d = dimension(image, COUNT, BORDER);
+        Dimension d = dimension(img, COUNT, BORDER);
         final int X = d.width;
         final int Y = d.height;
         System.out.printf("Pieces: %dx%d=%d (%dx%d)%n", X, Y, X*Y, SX, SY);
-        if (image != null) {
+        if (img != null) {
             AffineTransform scale = AffineTransform.getScaleInstance(
-                (double) (X*SX-BORDER-BORDER) / image.getWidth(),
-                (double) (Y*SY-BORDER-BORDER) / image.getHeight());
+                (double) (X*SX-BORDER-BORDER) / img.getWidth(),
+                (double) (Y*SY-BORDER-BORDER) / img.getHeight());
             AffineTransformOp op = new AffineTransformOp(scale, AffineTransformOp.TYPE_BICUBIC);
-            image = op.filter(image, null);
+            img = op.filter(img, null);
             if (BORDER > 0) {
-                int width = BORDER + image.getWidth() + BORDER;
-                int height = BORDER + image.getHeight() + BORDER;
-                BufferedImage border = new BufferedImage(width, height, image.getType());
+                int width = BORDER + img.getWidth() + BORDER;
+                int height = BORDER + img.getHeight() + BORDER;
+                BufferedImage border = new BufferedImage(width, height, img.getType());
                 Graphics2D gg = border.createGraphics();
                 try {
                     gg.setComposite(AlphaComposite.Src);
@@ -484,8 +487,8 @@ public class Main extends GamePanel {
                     for (int i = 0; i < BORDER; i += 2) {
                         gg.fill3DRect(i/2, i/2, width-i, height-i, true);
                     }
-                    gg.drawImage(image, BORDER, BORDER, null);
-                    image = border;
+                    gg.drawImage(img, BORDER, BORDER, null);
+                    img = border;
                 } finally {
                     gg.dispose();
                 }
@@ -495,14 +498,14 @@ public class Main extends GamePanel {
         puzzleSize.width(X);
         puzzleSize.height(Y);
         
-        setImage(image);
+        setImage(img);
 
         switch (type) {
             case 0: {  // 5 ovals
                 for (int i = 0; i < 5; i++) {
                     Piece piece = new ShapePiece(0, 0,
                         new Ellipse2D.Float(30f*i, 0f, 29f, 59f), 
-                        image);
+                        img);
                     result.add(piece);
                 }
             } break;
@@ -526,7 +529,7 @@ public class Main extends GamePanel {
                 path.lineTo(000f, 100f);
                 path.closePath();
 
-                Piece piece1 = new ShapePiece(0, 0, path, image);
+                Piece piece1 = new ShapePiece(0, 0, path, img);
                 piece1.setLocation(100, 100);
                 result.add(piece1);
 
@@ -535,7 +538,7 @@ public class Main extends GamePanel {
                 path.lineTo(200f, 000f);
                 path.closePath();
 
-                Piece piece2 = new ShapePiece(0, 0, path, image);
+                Piece piece2 = new ShapePiece(0, 0, path, img);
                 piece2.setLocation(300, 100);
                 result.add(piece2);
 
@@ -550,7 +553,7 @@ public class Main extends GamePanel {
                     0f, 135f, Arc2D.CHORD), false);
                 path.closePath();
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, image));
+                result.add(new ShapePiece(0, 0, path, img));
 
                 path = new Path2D.Float();
                 path.append(new Arc2D.Float(000f, 000f, 
@@ -559,7 +562,7 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, image));
+                result.add(new ShapePiece(0, 0, path, img));
 
                 path = new Path2D.Float();
                 path.append(new Arc2D.Float(000f, 000f, 
@@ -568,7 +571,7 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, image));
+                result.add(new ShapePiece(0, 0, path, img));
 
                 path = new Path2D.Float(); 
                 path.append(new CubicCurve2D.Float(000f, 050f, 
@@ -578,7 +581,7 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, image));
+                result.add(new ShapePiece(0, 0, path, img));
 
                 path = new Path2D.Float();
                 path.append(new QuadCurve2D.Float(000f, 000f,
@@ -587,14 +590,14 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, image));
+                result.add(new ShapePiece(0, 0, path, img));
             } break;
 
             case 3: {  // one area
                 Area area = new Area(new Rectangle(100, 100));
                 area.add(new Area(new Ellipse2D.Float(110f, 035f, 030f, 030f)));
                 area.subtract(new Area(new Rectangle(90, 40, 30, 20)));
-                result.add(new ShapePiece(0, 0, area, image));
+                result.add(new ShapePiece(0, 0, area, img));
             } break;
 
             case 4: {  // 4 mask 1
@@ -604,7 +607,7 @@ public class Main extends GamePanel {
                     int y = 100 - (i%2)*50 + (i%8/2)*50 + (i%8/4)*150;
                     int ix = 850 + (i%2)*50 + (i%4/2)*50;
                     int iy = 600 - (i%2)*50 + (i%4/2)*50;
-                    MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask1, image, ix, iy, i / 4);
+                    MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask1, img, ix, iy, i / 4);
                     piece.setLocation(x, y);
                     result.add(piece);
                     quad[i % 4] = piece;
@@ -624,7 +627,7 @@ public class Main extends GamePanel {
                     int y = 50 + (i%8/2)*100 + (i%8/4)*50;
                     int ix = 450 + (i%2)*100;
                     int iy = 300 + (i%4/2)*100;
-                    MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask2, image, ix, iy, i / 4);
+                    MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask2, img, ix, iy, i / 4);
                     piece.setLocation(x, y);
                     result.add(piece);
                     quad[i % 4] = piece;
@@ -643,7 +646,7 @@ public class Main extends GamePanel {
             case 63:
             {  // rectangular/overlapped - correct orientation
                 final int rule = type - 60;
-                if (image == null) 
+                if (img == null) 
                     break;
                 Piece[][] quad = new Piece[X][Y];
                 boolean[][] used = new boolean[X][Y];
@@ -652,7 +655,7 @@ public class Main extends GamePanel {
                     for (int j = 0; j < Y; j++) {
                         int x = SX * i;
                         int y = SY * j;
-                        MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask2, image, x, y, rule);
+                        MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask2, img, x, y, rule);
                         result.add(piece);
                         quad[i][j] = piece;
                         if (i > 0)
@@ -698,7 +701,7 @@ public class Main extends GamePanel {
                             case 3: dir = Direction.WEST; break;
                             default: dir = Direction.NORTH; break;
                         }
-                        MaskPiece piece = new MaskPiece(x, y, dir, mask2, image, x, y, rule);
+                        MaskPiece piece = new MaskPiece(x, y, dir, mask2, img, x, y, rule);
                         result.add(piece);
                         quad[i][j] = piece;
                         if (i > 0)
@@ -754,8 +757,8 @@ public class Main extends GamePanel {
                             default: dir = Direction.NORTH; break;
                         }                        
                         MaskPiece piece = type >= 20 ?
-                                new MaskPieceDebug(x, y, dir, masks[i][j], image, x, y, rule, base, shapes[i][j]) :
-                                new MaskPiece(x, y, dir, masks[i][j], image, x, y, rule);
+                                new MaskPieceDebug(x, y, dir, masks[i][j], img, x, y, rule, base, shapes[i][j]) :
+                                new MaskPiece(x, y, dir, masks[i][j], img, x, y, rule);
                         piece.setName(String.format("%dx%d", j, i));
                         piece.setBackground(Color.getHSBColor((float)i/X, 0.25f+0.75f*j/Y, 0.8f));
                         quad[i][j] = piece;

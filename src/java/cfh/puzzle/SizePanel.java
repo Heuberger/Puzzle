@@ -54,7 +54,11 @@ public class SizePanel {
 
     private void initGUI() {
         imageName = new JLabel(name);
-        imageName.setToolTipText(String.format("size: %d x %d", image.getWidth(), image.getHeight()));
+        if (image != null) {
+            imageName.setToolTipText(String.format("size: %d x %d", image.getWidth(), image.getHeight()));
+        } else {
+            imageName.setToolTipText("no image");
+        }
 
         message = new JTextField();
         message.setEditable(false);
@@ -104,7 +108,11 @@ public class SizePanel {
         
         sizeField = new JTextField();
         sizeField.setEditable(false);
-        sizeField.setToolTipText(String.format("image size: %d x %d", image.getWidth(), image.getHeight()));
+        if (image != null) {
+            sizeField.setToolTipText(String.format("image size: %d x %d", image.getWidth(), image.getHeight()));
+        } else {
+            sizeField.setToolTipText("no image");
+        }
         
         panel = new JPanel();
         GroupLayout layout = new GroupLayout(panel);
@@ -143,7 +151,9 @@ public class SizePanel {
         vg.addComponent(sizeField);
         layout.setVerticalGroup(vg);
         
-        doSizeChanged();
+        if (image != null) {
+            doSizeChanged();
+        }
     }
     
     private void doSizeChanged() {
