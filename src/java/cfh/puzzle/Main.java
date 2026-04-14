@@ -328,7 +328,7 @@ public class Main extends GamePanel {
         
         random = new Random(seed);
 
-        for (Piece piece : createPieces(image)) {
+        for (Piece piece : createPieces(image, this)) {
             add(piece);
         }
         
@@ -454,7 +454,7 @@ public class Main extends GamePanel {
         return popup;
     }
     
-    private List<Piece> createPieces(BufferedImage img) {
+    private List<Piece> createPieces(BufferedImage img, GamePanel parent) {
         List<Piece> result = new ArrayList<Piece>();
         BufferedImage mask1 = loadImage("resources/mask1.png");
         BufferedImage mask2 = loadImage("resources/mask75.png");
@@ -503,9 +503,9 @@ public class Main extends GamePanel {
         switch (type) {
             case 0: {  // 5 ovals
                 for (int i = 0; i < 5; i++) {
-                    Piece piece = new ShapePiece(0, 0,
-                        new Ellipse2D.Float(30f*i, 0f, 29f, 59f), 
-                        img);
+                    Piece piece = new ShapePiece(parent, 0,
+                        0, 
+                        new Ellipse2D.Float(30f*i, 0f, 29f, 59f), img);
                     result.add(piece);
                 }
             } break;
@@ -529,7 +529,7 @@ public class Main extends GamePanel {
                 path.lineTo(000f, 100f);
                 path.closePath();
 
-                Piece piece1 = new ShapePiece(0, 0, path, img);
+                Piece piece1 = new ShapePiece(parent, 0, 0, path, img);
                 piece1.setLocation(100, 100);
                 result.add(piece1);
 
@@ -538,7 +538,7 @@ public class Main extends GamePanel {
                 path.lineTo(200f, 000f);
                 path.closePath();
 
-                Piece piece2 = new ShapePiece(0, 0, path, img);
+                Piece piece2 = new ShapePiece(parent, 0, 0, path, img);
                 piece2.setLocation(300, 100);
                 result.add(piece2);
 
@@ -553,7 +553,7 @@ public class Main extends GamePanel {
                     0f, 135f, Arc2D.CHORD), false);
                 path.closePath();
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, img));
+                result.add(new ShapePiece(parent, 0, 0, path, img));
 
                 path = new Path2D.Float();
                 path.append(new Arc2D.Float(000f, 000f, 
@@ -562,7 +562,7 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, img));
+                result.add(new ShapePiece(parent, 0, 0, path, img));
 
                 path = new Path2D.Float();
                 path.append(new Arc2D.Float(000f, 000f, 
@@ -571,7 +571,7 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, img));
+                result.add(new ShapePiece(parent, 0, 0, path, img));
 
                 path = new Path2D.Float(); 
                 path.append(new CubicCurve2D.Float(000f, 050f, 
@@ -581,7 +581,7 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, img));
+                result.add(new ShapePiece(parent, 0, 0, path, img));
 
                 path = new Path2D.Float();
                 path.append(new QuadCurve2D.Float(000f, 000f,
@@ -590,14 +590,14 @@ public class Main extends GamePanel {
                 path.closePath();
                 translate.translate(100d, 000d);
                 path.transform(translate);
-                result.add(new ShapePiece(0, 0, path, img));
+                result.add(new ShapePiece(parent, 0, 0, path, img));
             } break;
 
             case 3: {  // one area
                 Area area = new Area(new Rectangle(100, 100));
                 area.add(new Area(new Ellipse2D.Float(110f, 035f, 030f, 030f)));
                 area.subtract(new Area(new Rectangle(90, 40, 30, 20)));
-                result.add(new ShapePiece(0, 0, area, img));
+                result.add(new ShapePiece(parent, 0, 0, area, img));
             } break;
 
             case 4: {  // 4 mask 1
@@ -607,7 +607,7 @@ public class Main extends GamePanel {
                     int y = 100 - (i%2)*50 + (i%8/2)*50 + (i%8/4)*150;
                     int ix = 850 + (i%2)*50 + (i%4/2)*50;
                     int iy = 600 - (i%2)*50 + (i%4/2)*50;
-                    MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask1, img, ix, iy, i / 4);
+                    MaskPiece piece = new MaskPiece(parent, x, y, Direction.NORTH, mask1, img, ix, iy, i / 4);
                     piece.setLocation(x, y);
                     result.add(piece);
                     quad[i % 4] = piece;
@@ -627,7 +627,7 @@ public class Main extends GamePanel {
                     int y = 50 + (i%8/2)*100 + (i%8/4)*50;
                     int ix = 450 + (i%2)*100;
                     int iy = 300 + (i%4/2)*100;
-                    MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask2, img, ix, iy, i / 4);
+                    MaskPiece piece = new MaskPiece(parent, x, y, Direction.NORTH, mask2, img, ix, iy, i / 4);
                     piece.setLocation(x, y);
                     result.add(piece);
                     quad[i % 4] = piece;
@@ -655,7 +655,7 @@ public class Main extends GamePanel {
                     for (int j = 0; j < Y; j++) {
                         int x = SX * i;
                         int y = SY * j;
-                        MaskPiece piece = new MaskPiece(x, y, Direction.NORTH, mask2, img, x, y, rule);
+                        MaskPiece piece = new MaskPiece(parent, x, y, Direction.NORTH, mask2, img, x, y, rule);
                         result.add(piece);
                         quad[i][j] = piece;
                         if (i > 0)
@@ -701,7 +701,7 @@ public class Main extends GamePanel {
                             case 3: dir = Direction.WEST; break;
                             default: dir = Direction.NORTH; break;
                         }
-                        MaskPiece piece = new MaskPiece(x, y, dir, mask2, img, x, y, rule);
+                        MaskPiece piece = new MaskPiece(parent, x, y, dir, mask2, img, x, y, rule);
                         result.add(piece);
                         quad[i][j] = piece;
                         if (i > 0)
@@ -757,8 +757,8 @@ public class Main extends GamePanel {
                             default: dir = Direction.NORTH; break;
                         }                        
                         MaskPiece piece = type >= 20 ?
-                                new MaskPieceDebug(x, y, dir, masks[i][j], img, x, y, rule, base, shapes[i][j]) :
-                                new MaskPiece(x, y, dir, masks[i][j], img, x, y, rule);
+                                new MaskPieceDebug(parent, x, y, dir, masks[i][j], img, x, y, rule, base, shapes[i][j]) :
+                                new MaskPiece(parent, x, y, dir, masks[i][j], img, x, y, rule);
                         piece.setName(String.format("%dx%d", j, i));
                         piece.setBackground(Color.getHSBColor((float)i/X, 0.25f+0.75f*j/Y, 0.8f));
                         quad[i][j] = piece;

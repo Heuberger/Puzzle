@@ -5,6 +5,7 @@
 package cfh.puzzle;
 
 import static java.awt.event.MouseEvent.*;
+import static java.util.Objects.*;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -29,6 +30,8 @@ import javax.swing.SwingUtilities;
 public abstract class Piece extends JComponent
                             implements MouseListener, MouseMotionListener, MouseWheelListener {
 
+    protected final GamePanel parent;
+    
     private final int tileX;
     private final int tileY;
     
@@ -46,17 +49,15 @@ public abstract class Piece extends JComponent
     
     transient int id;
 
-    protected Piece(int x, int y) {
-        this(x, y, Direction.NORTH);
+    protected Piece(GamePanel parent, int x, int y) {
+        this(parent, x, y, Direction.NORTH);
     }
     
-    protected Piece(int x, int y, Direction d) {
-        if (d == null)
-            throw new IllegalArgumentException("null d");
-        
-        tileX = x;
-        tileY = y;
-        dir = d;
+    protected Piece(GamePanel parent, int x, int y, Direction d) {
+        this.parent = parent;
+        this.tileX = x;
+        this.tileY = y;
+        this.dir = requireNonNull(d);
         
         neighbours = new HashSet<Piece>();
         connected = new HashSet<Piece>();
@@ -100,37 +101,6 @@ public abstract class Piece extends JComponent
     public void connect(Piece piece) {
         connected.add(piece);
         piece.connected.add(this);
-//        for (Piece mine : getGroup()) {
-//            for (Piece other : piece.getGroup()) {
-//                if (mine == other)
-//                    continue;
-//                for (Piece neighbour : mine.getNeighbours()) {
-//                    if (other == neighbour) {
-//                        connected.add(other);
-//                        other.connected.add(this);
-//                    }
-//                }
-//            }
-//        }
-    }
-    
-    public void connectOLD(Piece p) {
-        if (connected.contains(p)) {
-            return;
-        }
-        int size;
-        size = this.connected.size();
-        Piece[] thisGroup = this.connected.toArray(new Piece[size+1]);
-        thisGroup[size] = this;
-        size = p.connected.size();
-        Piece[] otherGroup = p.connected.toArray(new Piece[size+1]);
-        otherGroup[size] = p;
-        for (Piece mine : thisGroup) {
-            for (Piece other : otherGroup) {
-                mine.connected.add(other);
-                other.connected.add(mine);
-            }
-        }
     }
     
     public void disconnect(Piece p) {

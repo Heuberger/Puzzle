@@ -39,12 +39,12 @@ public class MaskPiece extends Piece {
 
     private JWindow detail;
     
-    public MaskPiece(int x, int y, Direction dir, 
+    public MaskPiece(GamePanel parent, int x, int y, 
+                     Direction dir, 
                      BufferedImage msk, 
-                     BufferedImage img, 
-                     int ix, int iy, 
-                     int r) {
-        super(x, y, dir);
+                     BufferedImage img, int ix, 
+                     int iy, int r) {
+        super(parent, x, y, dir);
         mask = msk;
         image = img;
         imgX = ix;

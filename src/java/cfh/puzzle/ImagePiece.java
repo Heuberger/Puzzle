@@ -17,8 +17,8 @@ public class ImagePiece extends Piece {
     
     private final BufferedImage image;
     
-    public ImagePiece(int x, int y, BufferedImage img) {
-        super(x, y);
+    public ImagePiece(GamePanel parent, int x, int y, BufferedImage img) {
+        super(parent, x, y);
         image = img;
         setSize(img.getWidth(), img.getHeight());
     }

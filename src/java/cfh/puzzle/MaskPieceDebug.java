@@ -19,14 +19,14 @@ public class MaskPieceDebug extends MaskPiece {
 
     private Rectangle base;
 
-    public MaskPieceDebug(int x, int y, Direction dir, 
+    public MaskPieceDebug(GamePanel parent, int x, int y, 
+                     Direction dir, 
                      BufferedImage msk, 
-                     BufferedImage img, 
-                     int ix, int iy, 
+                     BufferedImage img, int ix, 
+                     int iy, 
                      int r, 
-                     Rectangle b, 
-                     Polygon shp) {
-        super(x, y, dir, msk, img, ix, iy, r);
+                     Rectangle b, Polygon shp) {
+        super(parent, x, y, dir, msk, img, ix, iy, r);
         base = b;
     }
     

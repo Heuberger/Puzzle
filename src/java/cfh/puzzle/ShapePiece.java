@@ -21,16 +21,16 @@ public class ShapePiece extends Piece {
     private final int imgX;
     private final int imgY;
     
-    public ShapePiece(int x, int y, Shape shp) {
-        this(x, y, shp, null, 0, 0);
+    public ShapePiece(GamePanel parent, int x, int y, Shape shp) {
+        this(parent, x, y, shp, null, 0, 0);
     }
     
-    public ShapePiece(int x, int y, Shape shp, Image img) {
-        this(x, y, shp, img, 0, 0);
+    public ShapePiece(GamePanel parent, int x, int y, Shape shp, Image img) {
+        this(parent, x, y, shp, img, 0, 0);
     }
     
-    public ShapePiece(int x, int y, Shape shp, Image img, int ix, int iy) {
-        super(x, y);
+    public ShapePiece(GamePanel parent, int x, int y, Shape shp, Image img, int ix, int iy) {
+        super(parent, x, y);
         Rectangle bounds = shp.getBounds();
         if (bounds.x < 0 || bounds.y < 0) {
             throw new IllegalArgumentException("negative bounds " + bounds);

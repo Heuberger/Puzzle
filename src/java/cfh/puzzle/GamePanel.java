@@ -76,6 +76,9 @@ public class GamePanel extends JPanel implements GameListener {
     private static final int KEY_NO_GROUP = KeyEvent.VK_SPACE;
     private int actualGroup = KEY_NO_GROUP;
     private final Map<Integer, List<Piece>> groups = new HashMap<>();
+    
+    private double scale = 1;
+    
 
     public GamePanel(String title, int sx, int sy) {
         if (sx < 1) throw new IllegalArgumentException("negative sx: " + sx);
@@ -153,6 +156,10 @@ public class GamePanel extends JPanel implements GameListener {
         return background;
     }
     
+    protected double scale() {
+        return scale;
+    }
+    
     protected List<Piece> getPieces() {
         return unmodifiableList(pieces);
     }
@@ -180,6 +187,10 @@ public class GamePanel extends JPanel implements GameListener {
         
         JMenuItem debug = new JMenuItem(createAction("Debug", this::doDebug));
         
+        JMenuItem half = new JMenuItem(createAction("half", ev -> { scale = 0.5; repaint(); }));
+        JMenuItem normal = new JMenuItem(createAction("normal", ev -> { scale = 1; repaint(); }));
+        JMenuItem two = new JMenuItem(createAction("double", ev -> { scale = 2; repaint(); }));
+        
         JPopupMenu menu = new JPopupMenu();
         menu.add(showMenuItem);
         menu.add(bg);
@@ -188,6 +199,10 @@ public class GamePanel extends JPanel implements GameListener {
         menu.add(arrange);
         menu.addSeparator();
         menu.add(debug);
+        menu.add(half);
+        menu.add(normal);
+        menu.add(two);
+        menu.addSeparator();
         
         return menu;
     }
@@ -277,26 +292,26 @@ public class GamePanel extends JPanel implements GameListener {
         }
 
         gg.setColor(Color.LIGHT_GRAY);
-        for (int x = 0; x < w; x += sizeX) {
+        for (int x = 0; x < w; x += scale*sizeX) {
             gg.drawLine(x, 0, x, h);
         }
-        for (int y = 0; y < h; y += sizeY) {
+        for (int y = 0; y < h; y += scale*sizeY) {
             gg.drawLine(0, y, w, y);
         }
 
         gg.setColor(Color.BLUE);
-        for (int x = 0; x < w; x += 5*sizeX) {
+        for (int x = 0; x < w; x += 5*scale*sizeX) {
             gg.drawLine(x, 0, x, h);
         }
-        for (int y = 0; y < h; y += 5*sizeY) {
+        for (int y = 0; y < h; y += 5*scale*sizeY) {
             gg.drawLine(0, y, w, y);
         }
 
         gg.setColor(Color.BLACK);
-        for (int x = 0; x < w; x += 10*sizeX) {
+        for (int x = 0; x < w; x += 10*scale*sizeX) {
             gg.drawLine(x, 0, x, h);
         }
-        for (int y = 0; y < h; y += 10*sizeY) {
+        for (int y = 0; y < h; y += 10*scale*sizeY) {
             gg.drawLine(0, y, w, y);
         }
 
@@ -314,6 +329,17 @@ public class GamePanel extends JPanel implements GameListener {
         gg.fillRect(-getX(), -getY(), 4+tw+4, th);
         gg.setColor(new Color(0, 0, 0, 255));
         gg.drawString(info, 4-getX(), fm.getAscent()+fm.getLeading()-getY());
+    }
+    
+    @Override
+    protected void paintChildren(Graphics g) {
+        Graphics2D gg = (Graphics2D) g.create();
+        try {
+            gg.scale(scale, scale);
+            super.paintChildren(gg);
+        } finally {
+            gg.dispose();
+        }
     }
     
     private void doHome(ActionEvent ev) {
