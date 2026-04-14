@@ -87,7 +87,7 @@ Pieces can be grouped together in Selection Groups named by a digit or letter. A
 
 - `SHIFT`-digit or `SHIFT`-letter to activate Selection Group.
 - `SHIFT-SPACE` to deactivate any group and unmark all pieces.
-- `CTRL-SHIFT`-digit or `CTRL-SHIFT`-letter to save the actually marked pieces to a Selection Group.
+- `CTRL-SHIFT`-digit or `CTRL-SHIFT`-letter to add the pieces of given Selection Group to the actual selection.
 
 ### Menu
 

@@ -99,8 +99,12 @@ public class GamePanel extends JPanel implements GameListener {
                 Point actual = getLocation();
                 
                 if (shift && ctrl && mark) {
-                    actualGroup = ch;
-                    groups.put(ch, pieces.stream().filter(Piece::isSelected).collect(toList()));
+                    if (groups.containsKey(ch)) {
+                        groups.get(ch).forEach(Piece::select);
+                    }
+                    if (actualGroup != KEY_NO_GROUP) {
+                        groups.put(actualGroup, pieces.stream().filter(Piece::isSelected).collect(toList()));
+                    }
                     repaint();
                     sound.groupCopy();
                 } else if (shift && (mark || ch == KEY_NO_GROUP)) {
@@ -109,7 +113,9 @@ public class GamePanel extends JPanel implements GameListener {
                     }
                     actualGroup = ch;
                     pieces.stream().forEach(Piece::unselect);
-                    groups.getOrDefault(ch, emptyList()).stream().forEach(Piece::select);
+                    if (groups.containsKey(ch)) {
+                        groups.get(ch).forEach(Piece::select);
+                    }
                     repaint();
                     sound.groupSelect();
                 } else if (ctrl && mark) {
