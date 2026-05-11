@@ -69,6 +69,7 @@ open a previously saved puzzle to continue playing.
 
 * `RIGHT` click background to open menu.
 * Use `LEFT` button on background to drag the whole surface.
+* While the 'MIDDLE' button is pressed on a piece, it will be displayed zoomed.
 * `CTRL`-digit or `CTRL`-letter to save current surface position under that key. 
   The corresponding digit or letter, without `CTRL`, to scroll to the corresponding saved position.
 * `BACKSPACE` to scroll back to last surface position.
