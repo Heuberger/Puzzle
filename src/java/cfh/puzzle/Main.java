@@ -107,7 +107,7 @@ public class Main extends GamePanel {
                         + "java -jar puzzle.jar -open <JIG-file>\n"
                         + "    <image>     image name (from resource) or path, none = no image\n"
                         + "    <count>     piece number\n"
-                        + "    <template>  40, 50, 55, 60, 65, 75, 85 = piece template\n"
+                        + "    <template>  40, 50, 55, 60, 65, 75, 85, 99 = piece template\n"
                         + "    <seed>      random = random seed, else the seed number\n"
                         + "    <type>      11 = normal, 21 = debug, others for testing\n"
                         + "    <JIG-file>  Jigsaw file to open"
